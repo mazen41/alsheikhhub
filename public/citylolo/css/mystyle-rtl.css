@@ -1,0 +1,19 @@
+.search-input-text{
+    
+    border-radius:0 65px 65px 0!important;
+    height: 41px!important;
+    background: #eae1e1;
+    font-family: 'Tajawal';
+}
+.search-input-button{
+    border-radius:50px 0 0 50px!important;
+    height: 41px;
+}
+.menu_title{
+  text-align: right;
+  padding: 5px 0;
+}
+.menu_count{
+  float: left;
+  padding: 0 5px;
+}

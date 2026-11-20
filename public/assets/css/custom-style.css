@@ -1,0 +1,135 @@
+/*your custom css goes here*/
+html{
+  /* font-family: 'citylololight'; */
+  font-family: 'Tajawal', sans-serif;
+
+}
+body{
+    
+  /* font-family: 'citylololight'; */
+  font-family: 'Tajawal', sans-serif;
+}
+h1,h2,h3,h4,h5,h6{
+  font-family: 'Tajawal', sans-serif;
+}
+.btn:not(:disabled):not(.disabled){
+  /* font-family: 'citylololight'; */
+  font-family: 'Tajawal', sans-serif;
+}
+span{
+  /* font-family: 'citylololight'; */
+  font-family: 'Tajawal', sans-serif;
+}
+header{
+  /* font-family: 'citylololight'; */
+  font-family: 'Tajawal', sans-serif;
+}
+.top-navbar{
+  /* font-family: 'citylololight'; */
+  font-family: 'Tajawal', sans-serif;
+}
+.container{
+  /* font-family: 'citylololight'; */
+  font-family: 'Tajawal', sans-serif;
+}
+.aiz-side-nav-list{
+  /* font-family: 'citylololight'; */
+  font-family: 'Tajawal', sans-serif;
+}
+.metismenu{
+  /* font-family: 'citylololight'; */
+  font-family: 'Tajawal', sans-serif;
+}
+.aiz-main-wrapper{
+  /* font-family: 'citylololight'; */
+  font-family: 'Tajawal', sans-serif;
+}
+.card{
+  /* font-family: 'citylololight'; */
+  font-family: 'Tajawal', sans-serif;
+}
+
+
+.show_submenu{
+  display: none;
+    position: absolute;
+    background: white;
+    color: black;
+    padding: 27px;
+    width: 100%;
+    margin: auto;
+    right: 0;
+    left: 0;
+    min-height: 300px;
+    text-align: left;
+    box-shadow: 5px 5px 5px 1px gray;
+}
+.electro-img{
+    border-radius: 50%;
+    object-fit: cover;
+    width: 200px;
+    height: 200px;
+}
+.jalal-img{
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: #f8f8f8 center center no-repeat;
+    background-size: cover;
+    margin: auto;
+    display: block;
+}
+.text-primary{
+  color: #c33!important;
+}
+
+.electromobile-title{
+  box-shadow:-6px 7px 0px 0px grey!important;
+}
+.electromobile-title h1{
+  text-align: left!important;
+}
+.electromobile-title span{
+  float: right!important;
+}
+.search-input-text{
+    
+    border-radius:65px 0 0 65px !important;
+    height: 41px!important;
+    background: #eae1e1;
+    font-family: 'Tajawal';
+}
+.search-input-button{
+    border-radius:0 50px 50px 0!important;
+    height: 41px;
+}
+.priceReductionPercentage{
+    background: rgba(252, 183, 183, .4);
+    padding: 4px 8px;
+    color: #c33;
+    right: 10px;
+    bottom: 46px;
+    font-weight: bold;
+    font-family: monospace;
+    line-height: 1;
+    font-size: 13px;
+    box-shadow: 0 0 10px rgba(255,255,255,.8)
+}
+
+.lolo-express{
+    position: absolute; bottom: 0; left: 0; width: 100%; padding: 10px 30px;
+    opacity: .4;
+}
+.lolo-express:hover{
+    opacity: .9;
+}
+@media(max-width: 768px){
+    .electromobile-title h1{
+        font-size: 26px;
+        padding-top: 8px;
+    }
+    .jalal-img{
+        width: 140px;
+        height: 140px;
+    }
+}

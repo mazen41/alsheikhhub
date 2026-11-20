@@ -1,0 +1,13 @@
+@font-face {
+    font-family: 'Tajawal';
+    src: url('Almarai-Bold.eot');
+    src: url('Almarai-Bold.eot?#iefix') format('embedded-opentype'),
+        url('Almarai-Bold.woff2') format('woff2'),
+        url('Almarai-Bold.woff') format('woff'),
+        url('Almarai-Bold.ttf') format('truetype'),
+        url('Almarai-Bold.svg#Almarai-Bold') format('svg');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
