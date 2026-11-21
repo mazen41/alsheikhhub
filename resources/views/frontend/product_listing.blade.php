@@ -40,10 +40,15 @@
 @endphp
 
 @section('content')
-    {{-- 2- categories --}}
-    @foreach (\App\Category::where('id',$category_id)->get()->take(11)  as  $category)
-        <ul class="list-unstyled mb-0 row gutters-5 text-center align-items-center justify-content-center my-4" style="gap: 10px;">
-            @foreach (\App\Category::where('parent_id', $category->id)->get() as $cat)
+    {{-- Child categories --}}
+    @php
+        $directSubcategories = $currentCategory
+            ? \App\Category::where('parent_id', $currentCategory->id)->get()
+            : collect();
+    @endphp
+    @if ($directSubcategories->isNotEmpty())
+        <ul class="list-unstyled mb-3 row gutters-5 text-center align-items-center justify-content-center" style="gap: 10px;">
+            @foreach ($directSubcategories as $cat)
                 <li class="minw-0 mt-0 text-center" style="padding-bottom: 40px;">
                     @php $categoryBanner = uploaded_asset($cat->banner); @endphp
                     <a href="{{ route('products.category', $cat->slug) }}" class="d-block rounded bg-white p-2 text-reset shadow-sm" style="width:150px;min-height:100px;border-radius:12px!important;">
@@ -61,52 +66,62 @@
                 </li>
             @endforeach
         </ul>
-    @endforeach
+    @endif
 
     {{-- 3- offers --}}
-    {{-- offers one --}}
-    @if (get_setting('home_banner4_images') != null)
+    @php
+        $banner4Images = json_decode(get_setting('home_banner4_images') ?: '[]', true) ?: [];
+        $banner4Categories = json_decode(get_setting('home_banner4_categories') ?: '[]', true) ?: [];
+        $banner4Links = json_decode(get_setting('home_banner4_links') ?: '[]', true) ?: [];
+        $matchingBanners4 = [];
+        foreach ($banner4Images as $key => $imageId) {
+            $imageUrl = uploaded_asset($imageId);
+            if ($currentCategory && (int) data_get($banner4Categories, $key, 0) === (int) $currentCategory->id && $imageUrl) {
+                $matchingBanners4[] = ['image' => $imageUrl, 'link' => data_get($banner4Links, $key, '#')];
+            }
+        }
+    @endphp
+    @if (count($matchingBanners4) > 0)
       <div class="mb-4">
           <div class="container-fluid">
               <div class="row gutters-10">
-                  @php $banner_4_imags = json_decode(get_setting('home_banner4_images')); @endphp
-                  @foreach ($banner_4_imags as $key => $value)
-                  @if (data_get(json_decode(get_setting('home_banner4_categories'), true), $key) == $category_id && uploaded_asset($value))
-                    
+                  @foreach ($matchingBanners4 as $banner)
                       <div class="col-xl col-md-6">
                           <div class="mb-3 mb-lg-0">
-                              <a href="{{ data_get(json_decode(get_setting('home_banner4_links'), true), $key, '#') }}" class="d-block text-reset text-center">
-                                  <img src="{{ uploaded_asset($value) }}" alt="{{ env('APP_NAME') }} promo" class="img-fluid w-100" style="max-height: 380px; object-fit: contain;" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/no-image-rect.svg') }}';">
-                                  {{-- {{ json_decode(get_setting('home_banner4_categories'), true)[$key] }}={{ $category_id }} --}}
+                              <a href="{{ $banner['link'] }}" class="d-block text-reset text-center">
+                                  <img src="{{ $banner['image'] }}" alt="{{ env('APP_NAME') }} promo" class="img-fluid w-100" style="max-height: 380px; object-fit: contain;" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/no-image-rect.svg') }}';">
                               </a>
                           </div>
                       </div>
-                      
-                      @endif
                   @endforeach
               </div>
           </div>
       </div>
     @endif
-    {{-- offers two --}}
-    @if (get_setting('home_banner7_images') != null)
+    @php
+        $banner7Images = json_decode(get_setting('home_banner7_images') ?: '[]', true) ?: [];
+        $banner7Categories = json_decode(get_setting('home_banner7_categories') ?: '[]', true) ?: [];
+        $banner7Links = json_decode(get_setting('home_banner7_links') ?: '[]', true) ?: [];
+        $matchingBanners7 = [];
+        foreach ($banner7Images as $key => $imageId) {
+            $imageUrl = uploaded_asset($imageId);
+            if ($currentCategory && (int) data_get($banner7Categories, $key, 0) === (int) $currentCategory->id && $imageUrl) {
+                $matchingBanners7[] = ['image' => $imageUrl, 'link' => data_get($banner7Links, $key, '#')];
+            }
+        }
+    @endphp
+    @if (count($matchingBanners7) > 0)
       <div class="mb-4">
           <div class="container-fluid">
               <div class="row gutters-10">
-                  @php $banner_7_imags = json_decode(get_setting('home_banner7_images')); @endphp
-                  @foreach ($banner_7_imags as $key => $value)
-                  @if (data_get(json_decode(get_setting('home_banner7_categories'), true), $key) == $category_id && uploaded_asset($value))
-                    
+                  @foreach ($matchingBanners7 as $banner)
                       <div class="col-xl col-md-6">
                           <div class="mb-3 mb-lg-0">
-                              <a href="{{ data_get(json_decode(get_setting('home_banner7_links'), true), $key, '#') }}" class="d-block text-reset text-center">
-                                  <img src="{{ uploaded_asset($value) }}" alt="{{ env('APP_NAME') }} promo" class="img-fluid w-100" style="max-height: 380px; object-fit: contain;" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/no-image-rect.svg') }}';">
-                                  {{-- {{ json_decode(get_setting('home_banner7_categories'), true)[$key] }}={{ $category_id }} --}}
+                              <a href="{{ $banner['link'] }}" class="d-block text-reset text-center">
+                                  <img src="{{ $banner['image'] }}" alt="{{ env('APP_NAME') }} promo" class="img-fluid w-100" style="max-height: 380px; object-fit: contain;" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/no-image-rect.svg') }}';">
                               </a>
                           </div>
                       </div>
-                      
-                      @endif
                   @endforeach
               </div>
           </div>
@@ -414,7 +429,7 @@
                           </div>
                           <input type="hidden" name="min_price" value="">
                           <input type="hidden" name="max_price" value="">
-                          <div class="row gutters-5 row-cols-xxl-4 row-cols-xl-4 row-cols-lg-4 row-cols-md-3 row-cols-2">
+                          <div class="row gutters-5 justify-content-center row-cols-xxl-4 row-cols-xl-4 row-cols-lg-4 row-cols-md-3 row-cols-2">
                               @foreach ($products as $key => $product)
                               <div class="col mb-3">
                                    @include('common.product_item', ['product' => $product])

@@ -1,5 +1,5 @@
 @php $productImage = uploaded_asset($product->thumbnail_img); @endphp
-<div class="aiz-card-box h-100 border border-light rounded shadow-sm hov-shadow-md has-transition bg-white position-relative" style="padding-bottom: 36px;">
+<div class="aiz-card-box h-100 border border-light rounded shadow-sm hov-shadow-md has-transition bg-white position-relative">
       <div class="position-relative">
           <a href="{{ route('product', $product->slug) }}" class="d-block">
               @if ($productImage)
