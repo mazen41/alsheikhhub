@@ -60,13 +60,13 @@
               <li class="minw-0 mt-3 text-center">
                   <a href="{{ route('products.category', $cat->slug) }}" class="d-block rounded bg-white p-2 text-reset shadow-sm" style="width:120px;height:120px;border-radius:100%!important;">
                       <img
-                          src="{{ static_asset('assets/img/placeholder.jpg') }}"
+                          src="{{ static_asset('assets/img/no-image.svg') }}"
                           data-src="{{ uploaded_asset($cat->banner) }}"
                           alt="{{ $cat->getTranslation('name') }}"
                           class="lazyload img-fit"
                           
                           style="height: 100px;width: 100px;border-radius: 100%;object-fit: cover;"
-                          onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder-rect.jpg') }}';"
+                          onerror="this.onerror=null;this.src='{{ static_asset('assets/img/no-image-rect.svg') }}';"
                       >
                       <div class="text-truncate fs-12 fw-600 mt-2 opacity-70">{{ $cat->getTranslation('name') }}</div>
                   </a>
@@ -87,7 +87,7 @@
                     <div class="col-xl col-md-6">
                         <div class="mb-3 mb-lg-0">
                             <a href="{{ json_decode(get_setting('home_banner4_links'), true)[$key] }}" class="d-block text-reset">
-                                <img src="{{ static_asset('assets/img/placeholder-rect.jpg') }}" data-src="{{ uploaded_asset($banner_4_imags[$key]) }}" alt="{{ env('APP_NAME') }} promo" class="img-fluid lazyload">
+                                <img src="{{ static_asset('assets/img/no-image-rect.svg') }}" data-src="{{ uploaded_asset($banner_4_imags[$key]) }}" alt="{{ env('APP_NAME') }} promo" class="img-fluid lazyload">
                                 {{-- {{ json_decode(get_setting('home_banner4_categories'), true)[$key] }}={{ $category_id }} --}}
                             </a>
                         </div>
@@ -123,10 +123,10 @@
                               <a href="{{ route('product', $product->slug) }}" class="d-block">
                                   <img
                                       class="img-fit lazyload mx-auto h-140px h-md-210px"
-                                      src="{{ static_asset('assets/img/placeholder.jpg') }}"
+                                      src="{{ static_asset('assets/img/no-image.svg') }}"
                                       data-src="{{ uploaded_asset($product->thumbnail_img) }}"
                                       alt="{{  $product->getTranslation('name')  }}"
-                                      onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';"
+                                      onerror="this.onerror=null;this.src='{{ static_asset('assets/img/no-image.svg') }}';"
                                   >
                               </a>
                               <div class="absolute-top-right aiz-p-hov-icon">
@@ -258,10 +258,10 @@
                                   <a href="{{ route('product', $product->slug) }}" class="d-block">
                                       <img
                                           class="img-fit lazyload mx-auto h-140px h-md-210px"
-                                          src="{{ static_asset('assets/img/placeholder.jpg') }}"
+                                          src="{{ static_asset('assets/img/no-image.svg') }}"
                                           data-src="{{ uploaded_asset($product->thumbnail_img) }}"
                                           alt="{{  $product->getTranslation('name')  }}"
-                                          onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';"
+                                          onerror="this.onerror=null;this.src='{{ static_asset('assets/img/no-image.svg') }}';"
                                       >
                                   </a>
                                   <div class="absolute-top-right aiz-p-hov-icon">
@@ -556,10 +556,10 @@
                                             <a href="{{ route('product', $product->slug) }}" class="d-block">
                                                 <img
                                                     class="img-fit lazyload mx-auto h-160px h-md-220px h-xl-270px h-xxl-250px"
-                                                    src="{{ static_asset('assets/img/placeholder.jpg') }}"
+                                                    src="{{ static_asset('assets/img/no-image.svg') }}"
                                                     data-src="{{ uploaded_asset($product->thumbnail_img) }}"
                                                     alt="{{  $product->getTranslation('name')  }}"
-                                                    onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';"
+                                                    onerror="this.onerror=null;this.src='{{ static_asset('assets/img/no-image.svg') }}';"
                                                 >
                                             </a>
                                             <div class="absolute-top-right aiz-p-hov-icon">

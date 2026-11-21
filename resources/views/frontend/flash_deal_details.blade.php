@@ -6,7 +6,7 @@
     <div style="background-color:{{ $flash_deal->background_color }}">
         <section class="text-center mb-5">
             <img
-                src="{{ static_asset('assets/img/placeholder-rect.jpg') }}"
+                src="{{ static_asset('assets/img/no-image-rect.svg') }}"
                 data-src="{{ uploaded_asset($flash_deal->banner) }}"
                 alt="{{ $flash_deal->title }}"
                 class="img-fit w-100 lazyload"
@@ -30,10 +30,10 @@
                                         <a href="{{ route('product', $product->slug) }}" class="d-block">
                                             <img
                                                 class="img-fit lazyload mx-auto h-160px h-sm-200px h-md-220px h-xl-270px"
-                                                src="{{ static_asset('assets/img/placeholder.jpg') }}"
+                                                src="{{ static_asset('assets/img/no-image.svg') }}"
                                                 data-src="{{ uploaded_asset($product->thumbnail_img) }}"
                                                 alt="{{  $product->getTranslation('name')  }}"
-                                                onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';"
+                                                onerror="this.onerror=null;this.src='{{ static_asset('assets/img/no-image.svg') }}';"
                                             >
                                         </a>
                                         <div class="absolute-top-right aiz-p-hov-icon">

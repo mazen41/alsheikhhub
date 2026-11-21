@@ -49,8 +49,8 @@
                         <img
                             height="70"
                             class="lazyload"
-                            src="{{ static_asset('assets/img/placeholder.jpg') }}"
-                            data-src="@if ($shop->logo !== null) {{ uploaded_asset($shop->logo) }} @else {{ static_asset('assets/img/placeholder.jpg') }} @endif"
+                            src="{{ static_asset('assets/img/no-image.svg') }}"
+                            data-src="@if ($shop->logo !== null) {{ uploaded_asset($shop->logo) }} @else {{ static_asset('assets/img/no-image.svg') }} @endif"
                             alt="{{ $shop->name }}"
                         >
                         <div class="pl-4 text-left">
@@ -131,7 +131,7 @@
                     @if ($shop->sliders != null)
                         @foreach (explode(',',$shop->sliders) as $key => $slide)
                             <div class="carousel-box">
-                                <img class="d-block w-100 lazyload rounded h-200px h-lg-380px img-fit" src="{{ static_asset('assets/img/placeholder-rect.jpg') }}" data-src="{{ uploaded_asset($slide) }}" alt="{{ $key }} offer">
+                                <img class="d-block w-100 lazyload rounded h-200px h-lg-380px img-fit" src="{{ static_asset('assets/img/no-image-rect.svg') }}" data-src="{{ uploaded_asset($slide) }}" alt="{{ $key }} offer">
                             </div>
                         @endforeach
                     @endif
@@ -155,10 +155,10 @@
                                             <a href="{{ route('product', $product->slug) }}" class="d-block">
                                                 <img
                                                     class="img-fit lazyload mx-auto h-140px h-md-210px"
-                                                    src="{{ static_asset('assets/img/placeholder.jpg') }}"
+                                                    src="{{ static_asset('assets/img/no-image.svg') }}"
                                                     data-src="{{ uploaded_asset($product->thumbnail_img) }}"
                                                     alt="{{  $product->getTranslation('name')  }}"
-                                                    onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';"
+                                                    onerror="this.onerror=null;this.src='{{ static_asset('assets/img/no-image.svg') }}';"
                                                 >
                                             </a>
                                             <div class="absolute-top-right aiz-p-hov-icon">
@@ -237,10 +237,10 @@
                                 <a href="{{ route('product', $product->slug) }}" class="d-block">
                                     <img
                                         class="img-fit lazyload mx-auto h-160px h-sm-200px h-md-220px h-xl-270px"
-                                        src="{{ static_asset('assets/img/placeholder.jpg') }}"
+                                        src="{{ static_asset('assets/img/no-image.svg') }}"
                                         data-src="{{ uploaded_asset($product->thumbnail_img) }}"
                                         alt="{{  $product->getTranslation('name')  }}"
-                                        onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';"
+                                        onerror="this.onerror=null;this.src='{{ static_asset('assets/img/no-image.svg') }}';"
                                     >
                                 </a>
                                 <div class="absolute-top-right aiz-p-hov-icon">

@@ -37,11 +37,11 @@
                             <div class="col-4">
                                 <a href="{{ route('shop.visit', $shop->slug) }}" class="d-block p-3" tabindex="0">
                                     <img
-                                        src="{{ static_asset('assets/img/placeholder-rect.jpg') }}"
+                                        src="{{ static_asset('assets/img/no-image-rect.svg') }}"
                                         data-src="{{ uploaded_asset($shop->logo) }}"
                                         alt="{{ $shop->name }}"
                                         class="img-fluid lazyload"
-                                        onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder-rect.jpg') }}';"
+                                        onerror="this.onerror=null;this.src='{{ static_asset('assets/img/no-image-rect.svg') }}';"
                                     >
                                 </a>
                             </div>

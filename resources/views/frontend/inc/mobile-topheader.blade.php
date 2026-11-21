@@ -32,14 +32,14 @@
                             }
                         @endphp
                         <a href="javascript:void(0)" class="dropdown-toggle text-reset py-0" data-toggle="dropdown" data-display="static">
-                            <img src="{{ static_asset('assets/img/placeholder.jpg') }}" data-src="{{ static_asset('assets/img/flags/'.$locale.'.png') }}" class="mr-0 lazyload" alt="{{ \App\Language::where('code', $locale)->first()->name }}" height="14">
+                            <img src="{{ static_asset('assets/img/no-image.svg') }}" data-src="{{ static_asset('assets/img/flags/'.$locale.'.png') }}" class="mr-0 lazyload" alt="{{ \App\Language::where('code', $locale)->first()->name }}" height="14">
                             <span class="opacity-60 px-2">{{ \App\Language::where('code', $locale)->first()->name }}</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-left">
                             @foreach (\App\Language::all() as $key => $language)
                                 <li>
                                     <a href="javascript:void(0)" data-flag="{{ $language->code }}" class="dropdown-item @if($locale == $language) active @endif">
-                                        <img src="{{ static_asset('assets/img/placeholder.jpg') }}" data-src="{{ static_asset('assets/img/flags/'.$language->code.'.png') }}" class="mr-1 lazyload" alt="{{ $language->name }}" height="14">
+                                        <img src="{{ static_asset('assets/img/no-image.svg') }}" data-src="{{ static_asset('assets/img/flags/'.$language->code.'.png') }}" class="mr-1 lazyload" alt="{{ $language->name }}" height="14">
                                         <span class="language">{{ $language->name }}</span>
                                     </a>
                                 </li>
@@ -89,14 +89,14 @@
                             }
                         @endphp
                         <a href="javascript:void(0)" class="dropdown-toggle text-reset py-0" data-toggle="dropdown" data-display="static">
-                            <img src="{{ static_asset('assets/img/placeholder.jpg') }}" data-src="{{ static_asset('assets/img/flags/'.$locale.'.png') }}" class="mr-2 lazyload" alt="{{ \App\Language::where('code', $locale)->first()->name }}" height="11">
+                            <img src="{{ static_asset('assets/img/no-image.svg') }}" data-src="{{ static_asset('assets/img/flags/'.$locale.'.png') }}" class="mr-2 lazyload" alt="{{ \App\Language::where('code', $locale)->first()->name }}" height="11">
                             <span class="opacity-60">{{ \App\Language::where('code', $locale)->first()->name }}</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-left">
                             @foreach (\App\Language::all() as $key => $language)
                                 <li>
                                     <a href="javascript:void(0)" data-flag="{{ $language->code }}" class="dropdown-item @if($locale == $language) active @endif">
-                                        <img src="{{ static_asset('assets/img/placeholder.jpg') }}" data-src="{{ static_asset('assets/img/flags/'.$language->code.'.png') }}" class="mr-1 lazyload" alt="{{ $language->name }}" height="11">
+                                        <img src="{{ static_asset('assets/img/no-image.svg') }}" data-src="{{ static_asset('assets/img/flags/'.$language->code.'.png') }}" class="mr-1 lazyload" alt="{{ $language->name }}" height="11">
                                         <span class="language">{{ $language->name }}</span>
                                     </a>
                                 </li>

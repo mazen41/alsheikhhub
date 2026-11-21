@@ -43,8 +43,8 @@
                                     <div class="col-4">
                                         <a href="{{ route('shop.visit', $seller->user->shop->slug) }}" class="d-block p-3">
                                             <img
-                                                src="{{ static_asset('assets/img/placeholder.jpg') }}"
-                                                data-src="@if ($seller->user->shop->logo !== null) {{ uploaded_asset($seller->user->shop->logo) }} @else {{ static_asset('assets/img/placeholder.jpg') }} @endif"
+                                                src="{{ static_asset('assets/img/no-image.svg') }}"
+                                                data-src="@if ($seller->user->shop->logo !== null) {{ uploaded_asset($seller->user->shop->logo) }} @else {{ static_asset('assets/img/no-image.svg') }} @endif"
                                                 alt="{{ $seller->user->shop->name }}"
                                                 class="img-fluid lazyload"
                                             >

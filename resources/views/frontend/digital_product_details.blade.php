@@ -50,9 +50,9 @@
                                         <div class="carousel-box img-zoom rounded">
                                             <img
                                                 class="img-fluid lazyload"
-                                                src="{{ static_asset('assets/img/placeholder.jpg') }}"
+                                                src="{{ static_asset('assets/img/no-image.svg') }}"
                                                 data-src="{{ uploaded_asset($photo) }}"
-                                                onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';"
+                                                onerror="this.onerror=null;this.src='{{ static_asset('assets/img/no-image.svg') }}';"
                                             >
                                         </div>
                                         @endforeach
@@ -64,9 +64,9 @@
                                         <div class="carousel-box c-pointer border p-1 rounded">
                                             <img
                                                 class="lazyload mw-100 size-60px mx-auto"
-                                                src="{{ static_asset('assets/img/placeholder.jpg') }}"
+                                                src="{{ static_asset('assets/img/no-image.svg') }}"
                                                 data-src="{{ uploaded_asset($photo) }}"
-                                                onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';"
+                                                onerror="this.onerror=null;this.src='{{ static_asset('assets/img/no-image.svg') }}';"
                                             >
                                         </div>
                                         @endforeach
@@ -408,10 +408,10 @@
                                             <a href="{{ route('product', $top_product->slug) }}" class="d-block text-reset">
                                                 <img
                                                     class="img-fit lazyload h-110px"
-                                                    src="{{ static_asset('assets/img/placeholder.jpg') }}"
+                                                    src="{{ static_asset('assets/img/no-image.svg') }}"
                                                     data-src="{{ uploaded_asset($top_product->thumbnail_img) }}"
                                                     alt="{{ $top_product->getTranslation('name') }}"
-                                                    onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';"
+                                                    onerror="this.onerror=null;this.src='{{ static_asset('assets/img/no-image.svg') }}';"
                                                 >
                                             </a>
                                         </div>
@@ -485,12 +485,12 @@
                                                 <span class="avatar avatar-md mr-3">
                                                     <img
                                                         class="lazyload"
-                                                        src="{{ static_asset('assets/img/placeholder.jpg') }}"
-                                                        onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';"
+                                                        src="{{ static_asset('assets/img/no-image.svg') }}"
+                                                        onerror="this.onerror=null;this.src='{{ static_asset('assets/img/no-image.svg') }}';"
                                                         @if($review->user->avatar_original !=null)
                                                             data-src="{{ uploaded_asset($review->user->avatar_original) }}"
                                                         @else
-                                                            data-src="{{ uploaded_asset('assets/img/placeholder.jpg') }}"
+                                                            data-src="{{ uploaded_asset('assets/img/no-image.svg') }}"
                                                         @endif
                                                     >
                                                 </span>
@@ -616,10 +616,10 @@
                                             <a href="{{ route('product', $related_product->slug) }}" class="d-block">
                                                 <img
                                                     class="img-fit lazyload mx-auto h-140px h-md-210px"
-                                                    src="{{ static_asset('assets/img/placeholder.jpg') }}"
+                                                    src="{{ static_asset('assets/img/no-image.svg') }}"
                                                     data-src="{{ uploaded_asset($related_product->thumbnail_img) }}"
                                                     alt="{{ $related_product->getTranslation('name') }}"
-                                                    onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';"
+                                                    onerror="this.onerror=null;this.src='{{ static_asset('assets/img/no-image.svg') }}';"
                                                 >
                                             </a>
                                         </div>

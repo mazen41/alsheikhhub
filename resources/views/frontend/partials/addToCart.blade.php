@@ -12,9 +12,9 @@
                                 <div class="carousel-box img-zoom rounded">
                                     <img
                                         class="img-fluid lazyload"
-                                        src="{{ static_asset('assets/img/placeholder.jpg') }}"
+                                        src="{{ static_asset('assets/img/no-image.svg') }}"
                                         data-src="{{ uploaded_asset($stock->image) }}"
-                                        onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';"
+                                        onerror="this.onerror=null;this.src='{{ static_asset('assets/img/no-image.svg') }}';"
                                     >
                                 </div>
                             @endif
@@ -23,9 +23,9 @@
                         <div class="carousel-box img-zoom rounded">
                             <img
                                 class="img-fluid lazyload"
-                                src="{{ static_asset('assets/img/placeholder.jpg') }}"
+                                src="{{ static_asset('assets/img/no-image.svg') }}"
                                 data-src="{{ uploaded_asset($photo) }}"
-                                onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';"
+                                onerror="this.onerror=null;this.src='{{ static_asset('assets/img/no-image.svg') }}';"
                             >
                         </div>
                         @endforeach
@@ -39,9 +39,9 @@
                                 <div class="carousel-box c-pointer border p-1 rounded" data-variation="{{ $stock->variant }}">
                                     <img
                                         class="lazyload mw-100 size-50px mx-auto"
-                                        src="{{ static_asset('assets/img/placeholder.jpg') }}"
+                                        src="{{ static_asset('assets/img/no-image.svg') }}"
                                         data-src="{{ uploaded_asset($stock->image) }}"
-                                        onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';"
+                                        onerror="this.onerror=null;this.src='{{ static_asset('assets/img/no-image.svg') }}';"
                                     >
                                 </div>
                             @endif
@@ -50,9 +50,9 @@
                         <div class="carousel-box c-pointer border p-1 rounded">
                             <img
                                 class="lazyload mw-100 size-60px mx-auto"
-                                src="{{ static_asset('assets/img/placeholder.jpg') }}"
+                                src="{{ static_asset('assets/img/no-image.svg') }}"
                                 data-src="{{ uploaded_asset($photo) }}"
-                                onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';"
+                                onerror="this.onerror=null;this.src='{{ static_asset('assets/img/no-image.svg') }}';"
                             >
                         </div>
                         @endforeach
