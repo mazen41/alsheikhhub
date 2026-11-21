@@ -14,7 +14,7 @@
                     $featured_categories = \App\Category::where('featured', 1)->get();
                 @endphp
 
-                <div class="@if($num_todays_deal > 0) col-md-12 @else col-md-12 @endif">
+                <div class="@if($num_todays_deal > 0) col-lg-9 @else col-12 @endif">
                     @if (get_setting('home_slider_images') != null)
                         <div class="aiz-carousel dots-inside-bottom mobile-img-auto-height" data-arrows="true" data-dots="true" data-autoplay="true" data-infinite="true">
                             @php $slider_images = json_decode(get_setting('home_slider_images'), true);  @endphp
@@ -46,17 +46,17 @@
                 </div>
 
                 @if($num_todays_deal > 0)
-                <div class="col-lg-2 order-3 mt-3 mt-lg-0">
+                <div class="col-lg-3 order-3 mt-3 mt-lg-0">
                     <div class="bg-white rounded shadow-sm">
-                        <div class="bg-soft-primary rounded-top p-3 d-flex align-items-center justify-content-center">
+                        <div class="bg-soft-primary rounded-top p-3 d-flex align-items-center justify-content-between">
                             <span class="fw-600 fs-16 mr-2 text-truncate">
                                 {{ translate('Todays Deal') }}
                             </span>
                             <span class="badge badge-primary badge-inline">{{ translate('Hot') }}</span>
                         </div>
-                        <div class="c-scrollbar-light overflow-auto h-lg-400px p-2 bg-primary rounded-bottom">
-                            <div class="gutters-5 lg-no-gutters row row-cols-2 row-cols-lg-1">
-                            @foreach (filter_products(\App\Product::where('published', 1)->where('todays_deal', '1'))->get() as $key => $product)
+                        <div class="today-deal-panel p-2 bg-light rounded-bottom">
+                            <div class="gutters-5 lg-no-gutters row row-cols-1">
+                            @foreach (filter_products(\App\Product::where('published', 1)->where('todays_deal', '1'))->take(1)->get() as $key => $product)
                                 @if ($product != null)
                                 <div class="col mb-2">
                                     @include('common.product_item', ['product' => $product])
