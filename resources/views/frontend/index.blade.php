@@ -19,19 +19,25 @@
                         <div class="aiz-carousel dots-inside-bottom mobile-img-auto-height" data-arrows="true" data-dots="true" data-autoplay="true" data-infinite="true">
                             @php $slider_images = json_decode(get_setting('home_slider_images'), true);  @endphp
                             @foreach ($slider_images as $key => $value)
+                                @php
+                                    $sliderImageUrl = uploaded_asset($value);
+                                    $sliderImageHeight = count($featured_categories) == 0 ? 457 : 315;
+                                @endphp
                                 <div class="carousel-box">
-                                    <a href="{{ json_decode(get_setting('home_slider_links'), true)[$key] }}">
+                                    <a href="{{ data_get(json_decode(get_setting('home_slider_links'), true), $key, '#') }}">
+                                        @if ($sliderImageUrl)
                                         <img
                                             class="d-block mw-100 img-fit rounded shadow-sm"
-                                            src="{{ uploaded_asset($slider_images[$key]) }}"
+                                            src="{{ $sliderImageUrl }}"
                                             alt="{{ env('APP_NAME')}} promo"
-                                            @if(count($featured_categories) == 0)
-                                            height="457"
-                                            @else
-                                            height="315"
-                                            @endif
-                                            onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder-rect.jpg') }}';"
+                                            height="{{ $sliderImageHeight }}"
+                                            onerror="this.onerror=null;this.classList.add('d-none');this.nextElementSibling.classList.remove('d-none');"
                                         >
+                                        @endif
+                                        <div class="{{ $sliderImageUrl ? 'd-none' : '' }} bg-light text-muted d-flex flex-column align-items-center justify-content-center rounded shadow-sm" role="img" aria-label="{{ translate('No image available') }}" style="width: 100%; height: {{ $sliderImageHeight }}px;">
+                                            <i class="las la-image fs-1"></i>
+                                            <span>{{ translate('No image available') }}</span>
+                                        </div>
                                     </a>
                                 </div>
                             @endforeach
