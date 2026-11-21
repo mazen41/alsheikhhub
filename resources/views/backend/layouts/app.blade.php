@@ -6,7 +6,7 @@
 @endif
 <head>
 	<meta name="csrf-token" content="{{ csrf_token() }}">
-	<meta name="app-url" content="{{ getBaseURL() }}">
+	<meta name="app-url" content="{{ url('/') }}">
 	<meta name="file-base-url" content="{{ getFileBaseURL() }}">
 
 	<!-- Required meta tags -->
@@ -59,6 +59,7 @@
             complete: '{{ translate('Complete') }}',
             file: '{{ translate('File') }}',
             files: '{{ translate('Files') }}',
+            uploader_error: '{{ translate('Unable to open the file library. Please refresh and try again.') }}',
         }
 	</script>
 

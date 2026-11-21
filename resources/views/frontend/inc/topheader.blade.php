@@ -3,7 +3,14 @@
     <div class="row">
       <div class="header-center col-2">
         <div class="logo">
-          <a href="{{ route('home') }}"><img src="{{ static_asset('citylolo/images/logo_wide.webp') }}" alt="{{ env('APP_NAME') }}" style='width:70px!important'></a>
+          @php $headerLogo = get_setting('header_logo'); @endphp
+          <a href="{{ route('home') }}">
+            @if ($headerLogo)
+              <img src="{{ uploaded_asset($headerLogo) }}" alt="{{ get_setting('website_name') ?: env('APP_NAME') }}" style="width:70px!important">
+            @else
+              <img src="{{ static_asset('assets/img/logo.png') }}" alt="{{ get_setting('website_name') ?: env('APP_NAME') }}" style="width:70px!important">
+            @endif
+          </a>
         </div>
       </div>
       <div class="header-left text-center col-10">

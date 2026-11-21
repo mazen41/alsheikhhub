@@ -176,7 +176,21 @@ class AizUploadController extends Controller
                     break;
             }
         }
-        return $uploads->paginate(60)->appends(request()->query());
+        $uploads = $uploads->paginate(60)->appends(request()->query());
+
+        // In local storage, the database can contain media records whose files
+        // were not included in a project/database copy. Do not show broken image
+        // thumbnails in the uploader for those records.
+        if (env('FILESYSTEM_DRIVER') != 's3') {
+            $uploads->setCollection(
+                $uploads->getCollection()->filter(function ($upload) {
+                    return $upload->type != 'image'
+                        || is_file(public_path($upload->file_name));
+                })->values()
+            );
+        }
+
+        return $uploads;
     }
 
     public function destroy(Request $request,$id)

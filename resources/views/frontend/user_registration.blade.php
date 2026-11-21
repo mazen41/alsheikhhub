@@ -26,18 +26,18 @@
                                             @endif
                                             <span class="a_name"></span>
                                         </div>
-                                        <div class="form-group phone-form-group mb-3">
-                                                <input style="padding-right: 17px" type="tel" class="form-control{{ $errors->has('phone') ? ' is-invalid' : '' }}" value="{{ old('phone') }}" placeholder="{{  translate('phone number') }}" name="phone" autocomplete="off">
-
-                                        </div>
+                                        @if (\App\Addon::where('unique_identifier', 'otp_system')->first() == null || !\App\Addon::where('unique_identifier', 'otp_system')->first()->activated)
+                                            <div class="form-group phone-form-group mb-3">
+                                                <input type="tel" class="form-control{{ $errors->has('phone') ? ' is-invalid' : '' }}" value="{{ old('phone') }}" placeholder="{{ translate('phone number') }}" name="phone" autocomplete="off">
+                                            </div>
+                                        @endif
+                                        <input type="hidden" name="country_code" value="966">
 
                                         @if (\App\Addon::where('unique_identifier', 'otp_system')->first() != null && \App\Addon::where('unique_identifier', 'otp_system')->first()->activated)
                                             <div class="form-group phone-form-group mb-1">
                                                 <input type="tel" id="phone-code" class="form-control{{ $errors->has('phone') ? ' is-invalid' : '' }}" value="{{ old('phone') }}" placeholder="{{  translate('Email') }}" name="phone" autocomplete="off">
 
                                             </div>
-
-                                            <input type="hidden" name="country_code" value="">
 
                                             <div class="form-group email-form-group mb-1 d-none">
                                                 <input type="email" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email') }}" placeholder="{{  translate('Email') }}" name="email"  autocomplete="off">
@@ -168,43 +168,21 @@
         @endif
 
         var isPhoneShown = true,
-            countryData = window.intlTelInputGlobals.getCountryData(),
             input = document.querySelector("#phone-code");
 
-        for (var i = 0; i < countryData.length; i++) {
-            var country = countryData[i];
-            if(country.iso2 == 'bd'){
-                country.dialCode = '88';
-            }
+        if (input) {
+            var iti = intlTelInput(input, {
+                separateDialCode: true,
+                initialCountry: 'sa',
+                onlyCountries: ['sa'],
+                utilsScript: "{{ static_asset('assets/js/intlTelutils.js') }}?1590403638580"
+            });
+
+            $('input[name=country_code]').val('966');
+            input.addEventListener("countrychange", function() {
+                $('input[name=country_code]').val('966');
+            });
         }
-
-        var iti = intlTelInput(input, {
-            separateDialCode: true,
-            utilsScript: "{{ static_asset('assets/js/intlTelutils.js') }}?1590403638580",
-            onlyCountries: @php echo json_encode(\App\Country::where('status', 1)->pluck('code')->toArray()) @endphp,
-            customPlaceholder: function(selectedCountryPlaceholder, selectedCountryData) {
-                if(selectedCountryData.iso2 == 'bd'){
-                    return "01xxxxxxxxx";
-                }
-                return selectedCountryPlaceholder;
-            }
-        });
-
-        
-
-        
-
-
-        var country = iti.getSelectedCountryData();
-        $('input[name=country_code]').val(country.dialCode);
-
-        input.addEventListener("countrychange", function(e) {
-            // var currentMask = e.currentTarget.placeholder;
-
-            var country = iti.getSelectedCountryData();
-            $('input[name=country_code]').val(country.dialCode);
-
-        });
 
         function toggleEmailPhone(el){
             if(isPhoneShown){

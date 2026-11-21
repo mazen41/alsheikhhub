@@ -646,6 +646,25 @@
     <script src="{{ static_asset('citylolo/js/number.js') }}"></script>
     <script src="{{ static_asset('citylolo/js/main.js') }}"></script>
     <script src="{{ static_asset('citylolo/js/header.js') }}"></script>
+    @php
+        $whatsappValue = trim((string) get_setting('whatsapp_link'));
+        $whatsappHref = '';
+        if ($whatsappValue !== '') {
+            $whatsappHref = preg_match('/^https?:\/\//i', $whatsappValue)
+                ? $whatsappValue
+                : 'https://wa.me/'.preg_replace('/\D+/', '', $whatsappValue);
+        }
+    @endphp
+    @if ($whatsappHref !== '' && $whatsappHref !== 'https://wa.me/')
+        <a href="{{ $whatsappHref }}" class="store-whatsapp-chat" target="_blank" rel="noopener noreferrer" aria-label="{{ translate('Chat with us on WhatsApp') }}">
+            <i class="fab fa-whatsapp" aria-hidden="true"></i>
+        </a>
+        <style>
+            .store-whatsapp-chat{position:fixed;right:24px;bottom:24px;z-index:1040;width:58px;height:58px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:#25d366;color:#fff;font-size:32px;box-shadow:0 3px 12px rgba(0,0,0,.25)}
+            .store-whatsapp-chat:hover,.store-whatsapp-chat:focus{color:#fff;background:#1fb85a}
+            [dir="rtl"] .store-whatsapp-chat{right:auto;left:24px}
+        </style>
+    @endif
 </body>
 
 </html>

@@ -71,11 +71,6 @@
                                     <span class="aiz-side-nav-text">{{ translate('All Products') }}</span>
                                 </a>
                             </li>
-                            <li class="aiz-side-nav-item">
-                                <a href="{{route('products.admin')}}" class="aiz-side-nav-link {{ areActiveRoutes(['products.admin', 'products.create', 'products.admin.edit']) }}" >
-                                    <span class="aiz-side-nav-text">{{ translate('In House Products') }}</span>
-                                </a>
-                            </li>
                             @if(\App\BusinessSetting::where('type', 'vendor_system_activation')->first()->value == 1)
                                 <li class="aiz-side-nav-item">
                                     <a href="{{route('products.seller')}}" class="aiz-side-nav-link {{ areActiveRoutes(['products.seller', 'products.seller.edit']) }}">
@@ -140,13 +135,6 @@
                             </li>
                         @endif
 
-                        @if(Auth::user()->user_type == 'admin' || in_array('4', json_decode(Auth::user()->staff->role->permissions)))
-                            <li class="aiz-side-nav-item">
-                                <a href="{{ route('inhouse_orders.index') }}" class="aiz-side-nav-link {{ areActiveRoutes(['inhouse_orders.index', 'inhouse_orders.show'])}}" >
-                                    <span class="aiz-side-nav-text">{{translate('Inhouse orders')}}</span>
-                                </a>
-                            </li>
-                        @endif
                         @if(Auth::user()->user_type == 'admin' || in_array('5', json_decode(Auth::user()->staff->role->permissions)))
                           <li class="aiz-side-nav-item">
                             <a href="{{ route('seller_orders.index') }}" class="aiz-side-nav-link {{ areActiveRoutes(['seller_orders.index', 'seller_orders.show'])}}">
@@ -302,11 +290,6 @@
                             <span class="aiz-side-nav-arrow"></span>
                         </a>
                         <ul class="aiz-side-nav-list level-2">
-                            <li class="aiz-side-nav-item">
-                                <a href="{{ route('in_house_sale_report.index') }}" class="aiz-side-nav-link {{ areActiveRoutes(['in_house_sale_report.index'])}}">
-                                    <span class="aiz-side-nav-text">{{ translate('In House Product Sale') }}</span>
-                                </a>
-                            </li>
                             <li class="aiz-side-nav-item">
                                 <a href="{{ route('seller_sale_report.index') }}" class="aiz-side-nav-link {{ areActiveRoutes(['seller_sale_report.index'])}}">
                                     <span class="aiz-side-nav-text">{{ translate('Seller Products Sale') }}</span>

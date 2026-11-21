@@ -31,7 +31,7 @@
 					                                </div>
 					                                <div class="form-control file-amount">{{ translate('Choose File') }}</div>
 													<input type="hidden" name="types[]" value="home_banner5_images">
-					                                <input type="hidden" name="home_banner5_images[]" class="selected-files" value="{{ json_decode(get_setting('home_banner5_images'), true)[$key] }}">
+										<input type="hidden" name="home_banner5_images[]" class="selected-files" value="{{ data_get(json_decode(get_setting('home_banner5_images'), true), $key, '') }}">
 					                            </div>
 					                            <div class="file-preview box sm">
 					                            </div>
@@ -41,7 +41,7 @@
 										<div class="col-md-4">
 											<div class="form-group">
 												<input type="hidden" name="types[]" value="home_banner5_links">
-												<input type="text" class="form-control" placeholder="http://" name="home_banner5_links[]" value="{{ json_decode(get_setting('home_banner5_links'), true)[$key] }}">
+								<input type="text" class="form-control" placeholder="http://" name="home_banner5_links[]" value="{{ data_get(json_decode(get_setting('home_banner5_links'), true), $key, '') }}">
 											</div>
 										</div>
 
@@ -55,7 +55,7 @@
                             <div class="col-lg-12">
                               <input type="hidden" name="types[]" value="home_banner5_categories">
                                @php
-                                  $cat_id = json_decode(get_setting('home_banner5_categories'), true)[$key];
+												  $cat_id = data_get(json_decode(get_setting('home_banner5_categories'), true), $key);
                                 @endphp
                                 {{--  aiz-selectpicker --}}
                                 <select class="form-control" name="home_banner5_categories[]" id="category_id" data-selected="" data-live-search="true">
@@ -124,7 +124,7 @@
                             <div class="col-lg-12">
                               <input type="hidden" name="types[]" value="home_banner5_categories">
                                @php
-                                  $cat_id = json_decode(get_setting('home_banner5_categories'), true)[$key];
+                                  $cat_id = null;
                                 @endphp
                                 <select class="form-control" name="home_banner5_categories[]" id="category_id" data-selected="" data-live-search="true">
                                   @foreach (\App\Category::get() as  $category)

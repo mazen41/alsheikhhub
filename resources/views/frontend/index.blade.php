@@ -143,33 +143,6 @@
     </section>
     @endif
 
-    {{-- all categories --}}
-    <section class="container-fluid mb-4">
-      <div class="col-md-12 main-sections">
-        <a href="{{ route('categories.all') }}"><h1 class="text-right"> {{ translate('All Categories') }}</h1></a>
-        <div class="row align-content-center align-items-center text-center mt-4">
-          @foreach (\App\Category::where('level', 0)->orderBy('order_level', 'desc')->get()->take(11) as $key => $category)
-            <div class="col-md-3 col-6" style="padding-bottom: 30px;">
-                <div class="categories position-relative">
-              <a href="{{ route('products.category', $category->slug) }}" class="d-block">
-                <img src="{{ uploaded_asset($category->icon) }}" alt="{{ $category->getTranslation('name') }}">
-              </a>
-              
-                <h3>
-                    <a href="{{ route('products.category', $category->slug) }}">
-                    {{ $category->getTranslation('name') }}
-                    </a>
-                    </h3>
-              </div>
-            </div>
-          @endforeach
-
-        </div>
-      </div>
-    </section>
-    {{-- end all categories --}}
-
-
     {{-- Featured Section --}}
     <div id="section_featured">
 
@@ -245,7 +218,7 @@
                            <div class="aiz-carousel gutters-10 half-outside-arrow" data-items="6" data-xl-items="5" data-lg-items="4"  data-md-items="3" data-sm-items="2" data-xs-items="2" data-arrows='true' data-infinite='true'>
                                @foreach ($classified_products as $key => $classified_product)
                                    <div class="carousel-box">
-                                        @include('common.product_item', ['product' => $product])
+                                    @include('common.product_item', ['product' => $classified_product])
                                    </div>
                                @endforeach
                            </div>
@@ -283,93 +256,6 @@
     <br>
     <br>
     @endif
-
-    {{-- Top 10 categories and Brands --}}
-    <section class="mb-4">
-        <div class="container-fluid">
-            <div class="row">
-                @if (get_setting('top10_categories') != null)
-                    <div class="col-lg-6">
-                        <div class="d-flex mb-3 align-items-baseline border-bottom">
-                            <h3 class="h5 fw-700 mb-0">
-                                <span class="border-bottom border-primary border-width-2 pb-3 d-inline-block">{{ translate('Top 10 Categories') }}</span>
-                            </h3>
-                            <a href="{{ route('categories.all') }}" class="ml-auto mr-0 btn btn-primary btn-sm shadow-md">{{ translate('View All Categories') }}</a>
-                        </div>
-                        <div class="row gutters-5">
-                            @php $top10_categories = json_decode(get_setting('top10_categories')); @endphp
-                            @foreach (\App\Category::where('level', 0)->orderBy('order_level', 'desc')->get()->take(11) as $key => $category)
-                                {{-- @php $category = \App\Category::find($value); @endphp --}}
-                                {{-- @if ($category != null) --}}
-                                    <div class="col-sm-6">
-                                        <a href="{{ route('products.category', $category->slug) }}" class="bg-white border d-block text-reset rounded p-2 hov-shadow-md mb-2">
-                                            <div class="row align-items-center no-gutters">
-                                                <div class="col-3 text-center">
-                                                    <img
-                                                        src="{{ static_asset('assets/img/placeholder.jpg') }}"
-                                                        data-src="{{ uploaded_asset($category->banner) }}"
-                                                        alt="{{ $category->getTranslation('name') }}"
-                                                        class="img-fluid img lazyload h-60px"
-                                                        onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder-rect.jpg') }}';"
-                                                    >
-                                                </div>
-                                                <div class="col-7">
-                                                    <div class="text-truncat-2 pl-3 fs-14 fw-600 text-left">{{ $category->getTranslation('name') }}</div>
-                                                </div>
-                                                <div class="col-2 text-center">
-                                                    <i class="la la-angle-right text-primary"></i>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                {{-- @endif --}}
-                            @endforeach
-                        </div>
-                    </div>
-                @endif
-                @if (get_setting('top10_categories') != null)
-                    <div class="col-lg-6">
-                        <div class="d-flex mb-3 align-items-baseline border-bottom">
-                            <h3 class="h5 fw-700 mb-0">
-                                <span class="border-bottom border-primary border-width-2 pb-3 d-inline-block">{{ translate('Top 10 Brands') }}</span>
-                            </h3>
-                            <a href="{{ route('brands.all') }}" class="ml-auto mr-0 btn btn-primary btn-sm shadow-md">{{ translate('View All Brands') }}</a>
-                        </div>
-                        {{-- brands --}}
-                        <div class="row gutters-5">
-                            @php $top10_brands = json_decode(get_setting('top10_brands')); @endphp
-                            @foreach ($top10_brands as $key => $value)
-                                @php $brand = \App\Brand::find($value); @endphp
-                                @if ($brand != null)
-                                    <div class="col-sm-6">
-                                        <a href="{{ route('products.brand', $brand->slug) }}" class="bg-white border d-block text-reset rounded p-2 hov-shadow-md mb-2">
-                                            <div class="row align-items-center no-gutters">
-                                                <div class="col-4 text-center">
-                                                    <img
-                                                        src="{{ static_asset('assets/img/placeholder.jpg') }}"
-                                                        data-src="{{ uploaded_asset($brand->logo) }}"
-                                                        alt="{{ $brand->getTranslation('name') }}"
-                                                        class="img-fluid img lazyload h-60px"
-                                                        onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder-rect.jpg') }}';"
-                                                    >
-                                                </div>
-                                                <div class="col-6">
-                                                    <div class="text-truncate-2 pl-3 fs-14 fw-600 text-left">{{ $brand->getTranslation('name') }}</div>
-                                                </div>
-                                                <div class="col-2 text-center">
-                                                    <i class="la la-angle-right text-primary"></i>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                @endif
-                            @endforeach
-                        </div>
-                    </div>
-                @endif
-            </div>
-        </div>
-    </section>
 
 @endsection
 

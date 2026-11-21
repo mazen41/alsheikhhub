@@ -671,6 +671,19 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
                 function (data) {
                     $("body").append(data);
                     $("#aizUploaderModal").modal("show");
+                    var updateUploaderPaginationVisibility = function () {
+                        var uploadTabIsActive = $("#aiz-upload-new").hasClass(
+                            "active"
+                        );
+                        $("#aizUploaderModal .aiz-uploader-pagination").toggle(
+                            !uploadTabIsActive
+                        );
+                    };
+                    $("#aizUploaderModal [data-toggle='tab']").on(
+                        "shown.bs.tab",
+                        updateUploaderPaginationVisibility
+                    );
+                    updateUploaderPaginationVisibility();
                     AIZ.plugins.aizUppy();
                     AIZ.uploader.getAllUploads(
                         AIZ.data.appUrl + "/aiz-uploader/get_uploaded_files",
@@ -724,31 +737,42 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
                         }
                     );
                 }
-            );
+            ).fail(function (xhr, status, error) {
+                console.error("File library request failed:", xhr.status, error);
+                var errorMessage =
+                    AIZ.local.uploader_error ||
+                    "Unable to open the file library. Please refresh and try again.";
+                if (xhr.status) {
+                    errorMessage += " (HTTP " + xhr.status + ")";
+                }
+                AIZ.plugins.notify(
+                    "danger",
+                    errorMessage
+                );
+            });
             // }, 50);
         },
         initForInput: function () {
             $(document).on("click",'[data-toggle="aizuploader"]', function (e) {
-                if (e.detail === 1) {
-                    var elem = $(this);
-                    var multiple = elem.data("multiple");
-                    var type = elem.data("type");
-                    var oldSelectedFiles = elem.find(".selected-files").val();
+                e.preventDefault();
+                var elem = $(this);
+                var multiple = elem.data("multiple");
+                var type = elem.data("type");
+                var oldSelectedFiles = elem.find(".selected-files").val();
 
-                    multiple = !multiple ? "" : multiple;
-                    type = !type ? "" : type;
-                    oldSelectedFiles = !oldSelectedFiles
-                        ? ""
-                        : oldSelectedFiles;
+                multiple = !multiple ? "" : multiple;
+                type = !type ? "" : type;
+                oldSelectedFiles = !oldSelectedFiles
+                    ? ""
+                    : oldSelectedFiles;
 
-                    AIZ.uploader.trigger(
-                        this,
-                        "input",
-                        type,
-                        oldSelectedFiles,
-                        multiple
-                    );
-                }
+                AIZ.uploader.trigger(
+                    this,
+                    "input",
+                    type,
+                    oldSelectedFiles,
+                    multiple
+                );
             });
         },
         previewGenerate: function(){

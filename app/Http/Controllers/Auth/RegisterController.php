@@ -4,11 +4,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\User;
 use App\Customer;
-use App\BusinessSetting;
 use App\OtpConfiguration;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\OTPVerificationController;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -98,6 +96,18 @@ class RegisterController extends Controller
                 $otpController = new OTPVerificationController;
                 $otpController->send_code($user);
             }
+            else {
+                $user = User::create([
+                    'name' => $data['name'],
+                    'phone' => '+'.$data['country_code'].$data['phone'],
+                    'password' => Hash::make($data['password']),
+                    'email_verified_at' => now(),
+                ]);
+
+                $customer = new Customer;
+                $customer->user_id = $user->id;
+                $customer->save();
+            }
         }
 
         if(Cookie::has('referral_code')){
@@ -120,9 +130,16 @@ class RegisterController extends Controller
                 return back();
             }
         }
-        elseif (User::where('phone', '+'.$request->country_code.$request->phone)->first() != null) {
-            flash(translate('Phone already exists.'));
-            return back();
+        else {
+            $request->validate([
+                'phone' => 'required|string|max:30',
+                'country_code' => 'required|in:966',
+            ]);
+
+            if (User::where('phone', '+'.$request->country_code.$request->phone)->first() != null) {
+                flash(translate('Phone already exists.'));
+                return back();
+            }
         }
 
         $this->validator($request->all())->validate();
@@ -132,15 +149,9 @@ class RegisterController extends Controller
         $this->guard()->login($user);
 
         if($user->email != null){
-            if(BusinessSetting::where('type', 'email_verification')->first()->value != 1){
-                $user->email_verified_at = date('Y-m-d H:m:s');
-                $user->save();
-                flash(translate('Registration successfull.'))->success();
-            }
-            else {
-                event(new Registered($user));
-                flash(translate('Registration successfull. Please verify your email.'))->success();
-            }
+            $user->email_verified_at = now();
+            $user->save();
+            flash(translate('Registration successfull.'))->success();
         }
 
         return $this->registered($request, $user)
@@ -149,7 +160,7 @@ class RegisterController extends Controller
 
     protected function registered(Request $request, $user)
     {
-        if ($user->email == null) {
+        if ($user->email == null && \App\Addon::where('unique_identifier', 'otp_system')->value('activated')) {
             return redirect()->route('verification');
         }
         else {

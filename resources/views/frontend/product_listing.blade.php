@@ -34,40 +34,28 @@
     <meta property="og:description" content="{{ $meta_description }}" />
 @endsection
 
+@php
+    $currentCategory = isset($category_id) ? \App\Category::find($category_id) : null;
+    $isSubcategory = $currentCategory && $currentCategory->parent_id != 0;
+@endphp
 
 @section('content')
-    {{-- 1- CatSlide for eatch Category --}}
-    <div class="aiz-carousel dots-inside-bottom mobile-img-auto-height" data-arrows="true" data-dots="true" data-autoplay="true" data-infinite="true">            
-              @foreach (\App\Catslide::where('category_id', $category_id)->get()  as  $slider)
-              <div class="carousel-box">
-                <a href="{{ $slider->url }}">
-                    <img
-                      class="d-block mw-100 img-fit rounded shadow-sm"
-                      src="{{ $slider->name }}"
-                      height="250"
-                      onerror="this.onerror=null;this.src='{{ uploaded_asset($slider->logo) }}';"
-                  >
-                </a>
-            </div>
-              @endforeach
-        {{-- @endforeach --}}
-    </div>
-
     {{-- 2- categories --}}
     @foreach (\App\Category::where('id',$category_id)->get()->take(11)  as  $category)
         <ul class="list-unstyled mb-0 row gutters-5 text-center align-items-center justify-content-center my-4" style="gap: 10px;">
             @foreach (\App\Category::where('parent_id', $category->id)->get() as $cat)
                 <li class="minw-0 mt-0 text-center" style="padding-bottom: 40px;">
-                    <a href="{{ route('products.category', $cat->slug) }}" class="d-block rounded bg-white p-2 text-reset shadow-sm" style="width:150px;height:150px;border-radius:100%!important;">
-                        <img
-                            src="{{ static_asset('assets/img/placeholder.jpg') }}"
-                            data-src="{{ uploaded_asset($cat->banner) }}"
-                            alt="{{ $cat->getTranslation('name') }}"
-                            class="lazyload img-fit"
-                            
-                            style="height: 140px;width: 135px;border-radius: 100%;object-fit: cover;"
-                            onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder-rect.jpg') }}';"
-                        >
+                    @php $categoryBanner = uploaded_asset($cat->banner); @endphp
+                    <a href="{{ route('products.category', $cat->slug) }}" class="d-block rounded bg-white p-2 text-reset shadow-sm" style="width:150px;min-height:100px;border-radius:12px!important;">
+                        @if ($categoryBanner)
+                            <img
+                                src="{{ $categoryBanner }}"
+                                alt="{{ $cat->getTranslation('name') }}"
+                                class="img-fit"
+                                style="height:100px;width:135px;object-fit:cover;"
+                                onerror="this.onerror=null;this.remove();"
+                            >
+                        @endif
                         <div class="text-truncate fs-12 fw-600 mt-2 opacity-100" style="padding:10px;">{{ $cat->getTranslation('name') }}</div>
                     </a>
                 </li>
@@ -83,12 +71,12 @@
               <div class="row gutters-10">
                   @php $banner_4_imags = json_decode(get_setting('home_banner4_images')); @endphp
                   @foreach ($banner_4_imags as $key => $value)
-                  @if (json_decode(get_setting('home_banner4_categories'), true)[$key] == $category_id)
+                  @if (data_get(json_decode(get_setting('home_banner4_categories'), true), $key) == $category_id && uploaded_asset($value))
                     
                       <div class="col-xl col-md-6">
                           <div class="mb-3 mb-lg-0">
-                              <a href="{{ json_decode(get_setting('home_banner4_links'), true)[$key] }}" class="d-block text-reset text-center">
-                                  <img src="{{ static_asset('assets/img/placeholder-rect.jpg') }}" data-src="{{ uploaded_asset($banner_4_imags[$key]) }}" alt="{{ env('APP_NAME') }} promo" class="img-fluid lazyload">
+                              <a href="{{ data_get(json_decode(get_setting('home_banner4_links'), true), $key, '#') }}" class="d-block text-reset text-center">
+                                  <img src="{{ uploaded_asset($value) }}" alt="{{ env('APP_NAME') }} promo" class="img-fluid" onerror="this.onerror=null;this.closest('.col-xl').remove();">
                                   {{-- {{ json_decode(get_setting('home_banner4_categories'), true)[$key] }}={{ $category_id }} --}}
                               </a>
                           </div>
@@ -107,12 +95,12 @@
               <div class="row gutters-10">
                   @php $banner_7_imags = json_decode(get_setting('home_banner7_images')); @endphp
                   @foreach ($banner_7_imags as $key => $value)
-                  @if (json_decode(get_setting('home_banner7_categories'), true)[$key] == $category_id)
+                  @if (data_get(json_decode(get_setting('home_banner7_categories'), true), $key) == $category_id && uploaded_asset($value))
                     
                       <div class="col-xl col-md-6">
                           <div class="mb-3 mb-lg-0">
-                              <a href="{{ json_decode(get_setting('home_banner7_links'), true)[$key] }}" class="d-block text-reset text-center">
-                                  <img src="{{ static_asset('assets/img/placeholder-rect.jpg') }}" data-src="{{ uploaded_asset($banner_7_imags[$key]) }}" alt="{{ env('APP_NAME') }} promo" class="img-fluid lazyload">
+                              <a href="{{ data_get(json_decode(get_setting('home_banner7_links'), true), $key, '#') }}" class="d-block text-reset text-center">
+                                  <img src="{{ uploaded_asset($value) }}" alt="{{ env('APP_NAME') }} promo" class="img-fluid" onerror="this.onerror=null;this.closest('.col-xl').remove();">
                                   {{-- {{ json_decode(get_setting('home_banner7_categories'), true)[$key] }}={{ $category_id }} --}}
                               </a>
                           </div>
@@ -133,184 +121,50 @@
           $num_cats = count(\App\Category::where('parent_id', $category_id)->get());
         @endphp
 
-        {{-- 4- best selling --}}
-        @if($num_cats>0)
-        <section class="mb-4">
-            <div class="container-fluid">
-                <div class="px-2 py-4 px-md-4 py-md-3 bg-white shadow-sm rounded" style="margin-top: 20px;">
-                    <div class="d-flex mb-3 align-items-baseline border-bottom">
-                        <h3 class="h5 fw-700 mb-0">
-                            <span class="border-bottom border-primary border-width-2 pb-3 d-inline-block">{{ translate('best seller') }}</span>
+        @if (!$isSubcategory && $num_cats > 0)
+            @foreach (\App\Category::where('parent_id', $category_id)->orderBy('order_level', 'desc')->get() as $subcategory)
+                @php
+                    $subcategoryIds = \App\Utility\CategoryUtility::children_ids($subcategory->id);
+                    $subcategoryIds[] = $subcategory->id;
+                    $subcategoryProducts = filter_products(
+                        \App\Product::where('published', 1)
+                            ->whereIn('category_id', $subcategoryIds)
+                            ->orderBy('created_at', 'desc')
+                    )->limit(12)->get();
+                @endphp
 
-                        </h3>
-                        {{-- <a href="{{ route('products.category', $category_id) }}" class="ml-auto mr-0 btn btn-primary btn-sm shadow-md">{{ translate('View More') }}</a> --}}
-                    </div>
-                    <div class="aiz-carousel gutters-10 half-outside-arrow" data-items="8" data-xl-items="7" data-lg-items="6"  data-md-items="4" data-sm-items="3" data-xs-items="2" data-arrows='true' data-infinite='true'>
-                      @foreach (filter_products(\App\Product::where('published', 1)->where('subsubcategory_id',$category_id)->orderBy('num_of_sale', 'desc'))->limit(12)->get() as $key => $product)
-                          <div class="carousel-box" >
-                              @include('common.product_item', ['product' => $product])
-                          </div>
-                      @endforeach
-                    </div>
-                </div>
-            </div>
-        </section>
-        @endif
-        <br>
-
-        {{-- 4.5- Recently Arrived --}}
-        @if($num_cats>0)
-        <section class="mb-4">
-          <div class="container-fluid">
-            <div class="px-2 py-4 px-md-4 py-md-3 bg-white shadow-sm rounded" style="margin-top: 20px;">
-              <div class="d-flex mb-3 align-items-baseline border-bottom">
-                <h3 class="h5 fw-700 mb-0">
-                  <span class="border-bottom border-primary border-width-2 pb-3 d-inline-block">{{ translate('Recently Arrived') }}</span>
-                </h3>
-                {{-- <a href="{{ route('products.category', $category_id) }}" class="ml-auto mr-0 btn btn-primary btn-sm shadow-md">{{ translate('View More') }}</a> --}}
-              </div>
-              <div class="aiz-carousel gutters-10 half-outside-arrow" data-items="6" data-xl-items="5" data-lg-items="4"  data-md-items="3" data-sm-items="2" data-xs-items="2" data-arrows='true' data-infinite='true'>
-                @foreach (filter_products(\App\Product::where('published', 1)->where('subsubcategory_id',$category_id)->orderBy('created_at', 'desc'))->limit(12)->get() as $key => $product)
-
-                <div class="carousel-box">
-                   @include('common.product_item', ['product' => $product])
-                </div>
-                @endforeach
-              </div>
-            </div>
-          </div>
-        </section>
-        @endif
-        <br>
-
-
-        {{-- 5- brands --}}
-        @php
-          $num_brands = count(\App\Brand::where('category_id', $category_id)->get());
-        @endphp
-
-          @if($num_brands>0)
-            <section class="mb-4">
-                  <div class="container-fluid">
-                      <div class="px-2 py-4 px-md-4 py-md-3 bg-white shadow-sm rounded">
-                          <div class="d-flex mb-3 align-items-baseline border-bottom">
-                              <h3 class="h5 fw-700 mb-0">
-                                  <span class="border-bottom border-primary border-width-2 pb-3 d-inline-block">{{ translate('Shop by Brand') }}</span>
-                              </h3>
-                          </div>
-                            @foreach (\App\Brand::where('category_id', $category_id)->get() as $brand)
-                                <a href="{{ route('products.brand', $brand->slug) }}">
-                                  <img src="{{ uploaded_asset($brand->logo) }}" alt="{{ $brand->getTranslation('name') }}" class="h-100px w-140px" style="border: 1px solid lightgray;object-fit: cover;padding:5px;margin: 5px;">
-                                </a>
-                                {{-- {{ $num_brands }} --}}
-                                {{-- {{ $category->id }} = {{ $brand->category_id }} --}}
-                            @endforeach
-                      </div>
-                  </div>
-          </section>
-          @endif
-
-        {{-- 6- CatSlidetwo for eatch Category --}}
-            {{-- <div class="aiz-carousel dots-inside-bottom mobile-img-auto-height" data-arrows="true" data-dots="true" data-autoplay="true" data-infinite="true">            
-              @foreach (\App\Catslide::where('category_id', $category_id)->get()  as  $slider)
-              <div class="carousel-box">
-                <a href="#">
-                      <img
-                        class="d-block mw-100 img-fit rounded shadow-sm"
-                        src="{{ $slider->name }}"
-                        height="250"
-                        onerror="this.onerror=null;this.src='{{ uploaded_asset($slider->logo) }}';"
-                    >
-                </a>
-            </div>
-              @endforeach
-            </div> --}}
-
-
-        @if($num_brands>0)
-        
-          @foreach (\App\Category::where('parent_id',$category_id)->get()->take(11)  as  $category)
-          {{-- 8- subCategories slides --}}
-            <div class="aiz-carousel dots-inside-bottom mobile-img-auto-height" data-arrows="true" data-dots="true" data-autoplay="true" data-infinite="true">            
-              @foreach (\App\Catslide::where('category_id', $category->id)->get()  as  $slider)
-              <div class="carousel-box">
-                <a href="{{ $slider->url }}">
-                      <img
-                        class="d-block mw-100 img-fit rounded shadow-sm"
-                        style="padding-top: 20px;"
-                        src="{{ $slider->name }}"
-                        height="250"
-                        onerror="this.onerror=null;this.src='{{ uploaded_asset($slider->logo) }}';"
-                    >
-                </a>
-              </div>
-              @endforeach
-            </div>
-            <br>   
-            {{-- 7- subCategories products --}}
-
-            {{-- Recently Arrived from subcategory --}}
-            <section class="mb-4">
-                <div class="container-fluid">
-                    <div class="px-2 py-4 px-md-4 py-md-3 bg-white shadow-sm rounded">
-                        <div class="d-flex mb-3 align-items-baseline border-bottom">
-                            <h3 class="h5 fw-700 mb-0">
-                                <span class="border-bottom border-primary border-width-2 pb-3 d-inline-block">{{ translate('Recently Arrived') }} {{ translate('from') }} {{ $category->getTranslation('name') }}</span>
-                            </h3>                  
-                            <a href="{{ route('products.category', $category->slug) }}" class="ml-auto mr-0 btn btn-primary btn-sm shadow-md">{{ translate('View More') }}</a>
+                @if ($subcategoryProducts->isNotEmpty())
+                    <section class="mb-4">
+                        <div class="container-fluid">
+                            <div class="px-2 py-4 px-md-4 py-md-3 bg-white shadow-sm rounded">
+                                <div class="d-flex mb-3 align-items-baseline border-bottom">
+                                    <h2 class="h5 fw-700 mb-0">
+                                        <span class="border-bottom border-primary border-width-2 pb-3 d-inline-block">{{ $subcategory->getTranslation('name') }}</span>
+                                    </h2>
+                                    <a href="{{ route('products.category', $subcategory->slug) }}" class="ml-auto mr-0 btn btn-primary btn-sm shadow-md">{{ translate('View More') }}</a>
+                                </div>
+                                <div class="aiz-carousel gutters-10 half-outside-arrow" data-items="6" data-xl-items="5" data-lg-items="4" data-md-items="3" data-sm-items="2" data-xs-items="2" data-arrows="true" data-infinite="true">
+                                    @foreach ($subcategoryProducts as $product)
+                                        <div class="carousel-box">
+                                            @include('common.product_item', ['product' => $product])
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
                         </div>
-                        <div class="aiz-carousel gutters-10 half-outside-arrow" data-items="6" data-xl-items="5" data-lg-items="4"  data-md-items="3" data-sm-items="2" data-xs-items="2" data-arrows='true' data-infinite='true'>
-                          @foreach (filter_products(\App\Product::where('published', 1)->where('category_id',$category->id)->orderBy('num_of_sale', 'desc'))->limit(12)->get() as $key => $product)
-                              <div class="carousel-box">
-                                 @include('common.product_item', ['product' => $product])
-                              </div>
-                          @endforeach
-                        </div>
-
-                    </div>
-                </div>
-            </section>
-          <br>
-
-          {{-- Best Seller from subcategory --}}
-          <section class="mb-4">
-            <div class="container-fluid">
-              <div class="px-2 py-4 px-md-4 py-md-3 bg-white shadow-sm rounded">
-                <div class="d-flex mb-3 align-items-baseline border-bottom">
-                  <h3 class="h5 fw-700 mb-0">
-                    <span class="border-bottom border-primary border-width-2 pb-3 d-inline-block">{{ translate('Best Seller') }} {{ translate('from') }} {{ $category->getTranslation('name') }}</span>
-
-                  </h3>
-                  <a href="{{ route('products.category', $category->slug) }}" class="ml-auto mr-0 btn btn-primary btn-sm shadow-md">{{ translate('View More') }}</a>
-                </div>
-                <div class="aiz-carousel gutters-10 half-outside-arrow" data-items="6" data-xl-items="5" data-lg-items="4"  data-md-items="3" data-sm-items="2" data-xs-items="2" data-arrows='true' data-infinite='true'>
-                  @foreach (filter_products(\App\Product::where('published', 1)->where('category_id',$category->id)->orderBy('created_at', 'desc'))->limit(12)->get() as $key => $product)
-
-                  <div class="carousel-box">
-                       @include('common.product_item', ['product' => $product])
-                  </div>
-                  @endforeach
-                </div>
-
-              </div>
-            </div>
-          </section>
-          <br>
-
-          @endforeach
-
+                    </section>
+                @endif
+            @endforeach
         @endif
 
-  {{-- @else --}}
-    
-  
       {{-- products details --}}
-      @if($num_cats==0 || $num_brands==0)
+       @if($isSubcategory || $num_cats == 0)
        <section class="mb-4 pt-3">
           <div class="container sm-px-0">
               <form class="" id="search-form" action="" method="GET">
                   <div class="row">
-                      <div class="col-xl-3">
+                       @if (!$isSubcategory)
+                       <div class="col-xl-3">
                           <div class="aiz-filter-sidebar collapse-sidebar-wrap sidebar-xl sidebar-right z-1035">
                               <div class="overlay overlay-fixed dark c-pointer" data-toggle="class-toggle" data-target=".aiz-filter-sidebar" data-same=".filter-sidebar-thumb"></div>
                               <div class="collapse-sidebar c-scrollbar-light text-left">
@@ -485,8 +339,9 @@
                               </div>
                           </div>
                       </div>
+                       @endif
                       
-                      <div class="col-xl-9">
+                       <div class="@if($isSubcategory) col-xl-12 @else col-xl-9 @endif">
                           <ul class="breadcrumb bg-transparent p-0">
                               <li class="breadcrumb-item opacity-50">
                                   <a class="text-reset" href="{{ route('home') }}">{{ translate('Home')}}</a>
@@ -520,6 +375,14 @@
                                           @endif
                                       </h1>
                                   </div>
+                                  @if ($isSubcategory)
+                                      @php $parentCategory = \App\Category::find($currentCategory->parent_id); @endphp
+                                      <div class="form-group mr-3">
+                                          <a class="btn btn-sm btn-outline-secondary" href="{{ $parentCategory ? route('products.category', $parentCategory->slug) : route('home') }}">
+                                              <i class="las la-angle-left"></i> {{ translate('Back') }}
+                                          </a>
+                                      </div>
+                                  @else
                                   <div class="form-group ml-auto mr-0 w-200px d-none d-xl-block">
                                       <label class="mb-0 opacity-50">{{ translate('Brands')}}</label>
                                       <select class="form-control form-control-sm aiz-selectpicker" data-live-search="true" name="brand" onchange="filter()">
@@ -530,6 +393,7 @@
                                           @endforeach
                                       </select>
                                   </div>
+                                  @endif
                                   <div class="form-group w-200px ml-0 ml-xl-3">
                                       <label class="mb-0 opacity-50">{{ translate('Sort by')}}</label>
                                       <select class="form-control form-control-sm aiz-selectpicker" name="sort_by" onchange="filter()">
@@ -539,11 +403,13 @@
                                           <option value="price-desc" @isset($sort_by) @if ($sort_by == 'price-desc') selected @endif @endisset>{{ translate('Price high to low')}}</option>
                                       </select>
                                   </div>
+                                  @if (!$isSubcategory)
                                   <div class="d-xl-none ml-auto ml-xl-3 mr-0 form-group align-self-end">
                                       <button type="button" class="btn btn-icon p-0" data-toggle="class-toggle" data-target=".aiz-filter-sidebar">
                                           <i class="la la-filter la-2x"></i>
                                       </button>
                                   </div>
+                                  @endif
                               </div>
                           </div>
                           <input type="hidden" name="min_price" value="">

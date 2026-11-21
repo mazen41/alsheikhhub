@@ -1,13 +1,20 @@
-<div class="aiz-card-box h-100 border border-light rounded shadow-sm hov-shadow-md has-transition bg-white  position-relative" style="padding-bottom: 36px;">
+@php $productImage = uploaded_asset($product->thumbnail_img); @endphp
+<div class="aiz-card-box h-100 border border-light rounded shadow-sm hov-shadow-md has-transition bg-white position-relative" style="padding-bottom: 36px;">
       <div class="position-relative">
           <a href="{{ route('product', $product->slug) }}" class="d-block">
+              @if ($productImage)
               <img
                   class="img-fit lazyload mx-auto h-160px h-md-220px h-xl-270px h-xxl-250px"
-                  src="{{ static_asset('assets/img/placeholder.jpg') }}"
-                  data-src="{{ uploaded_asset($product->thumbnail_img) }}"
-                  alt="{{  $product->getTranslation('name')  }}"
-                  onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';"
+                  src="{{ $productImage }}"
+                  data-src="{{ $productImage }}"
+                  alt="{{ $product->getTranslation('name') }}"
+                  onerror="this.onerror=null;this.classList.add('d-none');this.nextElementSibling.classList.remove('d-none');"
               >
+              @endif
+              <div class="{{ $productImage ? 'd-none' : '' }} bg-light d-flex flex-column align-items-center justify-content-center text-muted h-160px h-md-220px h-xl-270px h-xxl-250px" role="img" aria-label="{{ translate('No image available') }}">
+                  <i class="las la-image fs-1"></i>
+                  <span class="fs-12">{{ translate('No image available') }}</span>
+              </div>
           </a>
           <div class="absolute-top-right aiz-p-hov-icon">
               <a href="javascript:void(0)" onclick="addToWishList({{ $product->id }})" data-toggle="tooltip" data-title="{{ translate('Add to wishlist') }}" data-placement="left">
@@ -59,8 +66,4 @@
               </div>
           @endif
       </div>
-          <div class="lolo-express">
-              <img src="{{static_asset('assets/img/lolo_express.png') }}" style="max-width: 100%;height:auto;" alt="Lolo express" />
-          </div>
-      
   </div>
