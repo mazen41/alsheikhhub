@@ -647,12 +647,16 @@
     <script src="{{ static_asset('citylolo/js/main.js') }}"></script>
     <script src="{{ static_asset('citylolo/js/header.js') }}"></script>
     @php
-        $whatsappValue = trim((string) get_setting('whatsapp_link'));
+        $whatsappValue = trim((string) (get_setting('whatsapp_link') ?: get_setting('contact_phone')));
         $whatsappHref = '';
         if ($whatsappValue !== '') {
             $whatsappHref = preg_match('/^https?:\/\//i', $whatsappValue)
                 ? $whatsappValue
                 : 'https://wa.me/'.preg_replace('/\D+/', '', $whatsappValue);
+
+            if ($whatsappHref !== 'https://wa.me/' && stripos($whatsappHref, 'text=') === false) {
+                $whatsappHref .= (strpos($whatsappHref, '?') === false ? '?' : '&').'text='.rawurlencode('مرحبًا، أود التواصل مع المتجر.');
+            }
         }
     @endphp
     @if ($whatsappHref !== '' && $whatsappHref !== 'https://wa.me/')

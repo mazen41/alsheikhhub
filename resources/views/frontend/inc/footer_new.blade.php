@@ -33,7 +33,21 @@
                        @endif --}}
 
 
-                    <a href="#" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                    @php
+                        $footerWhatsappValue = trim((string) (get_setting('whatsapp_link') ?: get_setting('contact_phone')));
+                        $footerWhatsappHref = '';
+                        if ($footerWhatsappValue !== '') {
+                            $footerWhatsappHref = preg_match('/^https?:\/\//i', $footerWhatsappValue)
+                                ? $footerWhatsappValue
+                                : 'https://wa.me/'.preg_replace('/\D+/', '', $footerWhatsappValue);
+                            if ($footerWhatsappHref !== 'https://wa.me/' && stripos($footerWhatsappHref, 'text=') === false) {
+                                $footerWhatsappHref .= (strpos($footerWhatsappHref, '?') === false ? '?' : '&').'text='.rawurlencode('مرحبًا، أود التواصل مع المتجر.');
+                            }
+                        }
+                    @endphp
+                    @if ($footerWhatsappHref !== '' && $footerWhatsappHref !== 'https://wa.me/')
+                        <a href="{{ $footerWhatsappHref }}" target="_blank" rel="noopener noreferrer" aria-label="{{ translate('Chat with us on WhatsApp') }}"><i class="fab fa-whatsapp"></i></a>
+                    @endif
                     <a href="#" target="_blank"><i class="fab fa-snapchat"></i></a>
                     @if ( get_setting('linkedin_link') !=  null )
 
