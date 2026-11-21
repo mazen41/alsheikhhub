@@ -391,7 +391,7 @@
                                   @if ($isSubcategory)
                                       @php $parentCategory = \App\Category::find($currentCategory->parent_id); @endphp
                                       <a class="btn btn-sm btn-outline-secondary" href="{{ $parentCategory ? route('products.category', $parentCategory->slug) : route('home') }}">
-                                          <i class="las la-angle-right"></i> {{ app()->getLocale() == 'ar' ? 'رجوع' : translate('Back') }}
+                                          <i class="las la-angle-right"></i> رجوع
                                       </a>
                                   @elseif (!$currentCategory)
                                       <div class="form-group mb-0 mr-3 w-200px d-none d-xl-block">
