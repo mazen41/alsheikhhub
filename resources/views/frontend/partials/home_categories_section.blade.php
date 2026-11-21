@@ -20,9 +20,6 @@
                 ->whereIn('category_id', $categoryIds)
                 ->orderBy('created_at', 'desc')
         )->limit(12)->get();
-        $categoryChildren = \App\Category::where('parent_id', $category->id)
-            ->orderBy('order_level', 'desc')
-            ->get();
         $categoryBanners = [];
         foreach ([4, 7] as $bannerSlot) {
             $bannerImages = json_decode(get_setting('home_banner'.$bannerSlot.'_images') ?: '[]', true) ?: [];
@@ -56,16 +53,6 @@
                         </a>
                     </div>
 
-                    @if ($categoryChildren->isNotEmpty())
-                        <div class="d-flex flex-wrap mb-3" style="gap: 8px;">
-                            @foreach ($categoryChildren as $child)
-                                <a href="{{ route('products.category', $child->slug) }}" class="btn btn-sm btn-outline-secondary">
-                                    {{ $child->getTranslation('name') }}
-                                </a>
-                            @endforeach
-                        </div>
-                    @endif
-
                     <div class="aiz-carousel gutters-10 half-outside-arrow" data-items="6" data-xl-items="5" data-lg-items="4" data-md-items="3" data-sm-items="2" data-xs-items="2" data-arrows="true" data-infinite="true">
                         @foreach ($categoryProducts as $product)
                             <div class="carousel-box">
@@ -79,7 +66,7 @@
                             @foreach ($categoryBanners as $banner)
                                 <div class="col-12 mb-3">
                                     <a href="{{ $banner['link'] }}" class="d-block">
-                                        <img src="{{ $banner['image'] }}" class="img-fluid w-100" alt="{{ $category->getTranslation('name') }}" onerror="this.onerror=null;this.closest('.col-12').remove();">
+                                        <img src="{{ $banner['image'] }}" class="img-fluid w-100" alt="{{ $category->getTranslation('name') }}" style="max-height: 380px; object-fit: contain;" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/no-image-rect.svg') }}';">
                                     </a>
                                 </div>
                             @endforeach

@@ -103,7 +103,17 @@ class LoginController extends Controller
            if(filter_var($request->get('email'), FILTER_VALIDATE_EMAIL)){
                return $request->only($this->username(), 'password');
            }
-           return ['phone'=>$request->get('email'),'password'=>$request->get('password')];
+
+           $phone = preg_replace('/[^0-9+]/', '', (string) $request->get('email'));
+           if (preg_match('/^05[0-9]{8}$/', $phone)) {
+               $phone = '+966'.substr($phone, 1);
+           } elseif (preg_match('/^5[0-9]{8}$/', $phone)) {
+               $phone = '+966'.$phone;
+           } elseif (preg_match('/^9665[0-9]{8}$/', $phone)) {
+               $phone = '+'.$phone;
+           }
+
+           return ['phone' => $phone, 'password' => $request->get('password')];
        }
 
     /**

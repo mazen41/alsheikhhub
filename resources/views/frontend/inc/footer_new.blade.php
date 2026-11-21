@@ -12,29 +12,6 @@
         @endforeach
     @endif
 
-    <div class="px-3 pt-4 py-md-4 py-md-3 pb-0 bg-white border-bottom border-top">
-        <div class="aiz-carousel half-outside-arrow" data-items="7" data-xl-items="7" data-lg-items="7" data-md-items="4" data-sm-items="3" data-xs-items="2" data-arrows='true' data-infinite='true'>
-            @foreach (\App\Category::where('level', 0)->orderBy('order_level', 'desc')->get()->take(7) as $category)
-                <div style="border:0px solid green;">
-                    <div class="position-relative px-3">
-                        <h4 style="font-size: 18px;">
-                            <a href="{{ route('products.category', $category->slug) }}">{{ $category->getTranslation('name') }}</a>
-                        </h4>
-                        <ul style="font-size: 14px;" class="list-unstyled p-0 m-0">
-                            @foreach (\App\Category::where('parent_id', $category->id)->orderBy('order_level', 'desc')->get()->take(11)  as  $cate)
-                                @if ($cate->parent_id == $category->id)
-                                    <li class="d-block">
-                                        <a class="py-2 mt-1 d-block" href="{{ url('category') }}/{{ $cate->slug }}" style="color:gray;line-height: 1;padding-right: 10px">{{ $cate->getTranslation('name') }} </a>
-                                    </li>
-                                @endif
-                            @endforeach
-                        </ul>
-                    </div>
-                </div>
-            @endforeach
-        </div>
-    </div>
-
     <div class="col-12 footer-apps text-center py-5 px-0">
         <div class="row align-content-center align-items-center d-flex justify-content-center">
             <div class="col-md-4 footer-apps-content">

@@ -48,8 +48,8 @@
         <div class="container-fluid">
             <div class="bg-white shadow-sm rounded p-3">
                 <div class="row">
-                    @if ($hasProductImages)
                     <div class="col-xl-5 col-lg-5 mb-4">
+                        @if ($hasProductImages)
                         <div class="sticky-top z-3 row gutters-10">
                             <div class="col order-1 order-md-2">
                                 <div class="aiz-carousel product-gallery" data-nav-for='.product-gallery-thumb' data-fade='true' data-auto-height='true'>
@@ -60,7 +60,7 @@
                                                     class="img-fluid lazyload"
                                                     src="{{ uploaded_asset($stock->image) }}"
                                                     data-src="{{ uploaded_asset($stock->image) }}"
-                                                    onerror="this.onerror=null;this.closest('.carousel-box').remove();"
+                                                    onerror="this.onerror=null;this.src='{{ static_asset('assets/img/no-image-rect.svg') }}';"
                                                 >
                                             </div>
                                         @endif
@@ -71,7 +71,7 @@
                                                 class="img-fluid lazyload"
                                                 src="{{ uploaded_asset($photo) }}"
                                                 data-src="{{ uploaded_asset($photo) }}"
-                                                onerror="this.onerror=null;this.closest('.carousel-box').remove();"
+                                                onerror="this.onerror=null;this.src='{{ static_asset('assets/img/no-image-rect.svg') }}';"
                                             >
                                         </div>
                                     @endforeach
@@ -86,7 +86,7 @@
                                                     class="lazyload mw-100 size-50px mx-auto"
                                                     src="{{ uploaded_asset($stock->image) }}"
                                                     data-src="{{ uploaded_asset($stock->image) }}"
-                                                    onerror="this.onerror=null;this.closest('.carousel-box').remove();"
+                                                    onerror="this.onerror=null;this.src='{{ static_asset('assets/img/no-image.svg') }}';"
                                                 >
                                             </div>
                                         @endif
@@ -97,17 +97,21 @@
                                             class="lazyload mw-100 size-50px mx-auto"
                                             src="{{ uploaded_asset($photo) }}"
                                             data-src="{{ uploaded_asset($photo) }}"
-                                            onerror="this.onerror=null;this.closest('.carousel-box').remove();"
+                                            onerror="this.onerror=null;this.src='{{ static_asset('assets/img/no-image.svg') }}';"
                                         >
                                     </div>
                                     @endforeach
                                 </div>
                             </div>
                         </div>
+                        @else
+                            <div class="d-flex align-items-center justify-content-center bg-light rounded overflow-hidden" style="height: 420px;">
+                                <img src="{{ static_asset('assets/img/no-image-rect.svg') }}" alt="{{ translate('No image available') }}" class="w-100 h-100" style="object-fit: cover;">
+                            </div>
+                        @endif
                     </div>
-                    @endif
 
-                    <div class="@if ($hasProductImages) col-xl-7 col-lg-7 @else col-12 @endif">
+                    <div class="col-xl-7 col-lg-7">
                         <div class="text-left">
                             <h1 class="mb-2 fs-20 fw-600" style="line-height: inherit;">
                                 {{ $detailedProduct->getTranslation('name') }}
@@ -321,14 +325,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-auto">
-                                  <small class="mr-2 opacity-100">{{ translate('Estimate Shipping Time')}}: </small>
-                                  @if ($detailedProduct->est_shipping_days)
-                                  {{ $detailedProduct->est_shipping_days }} {{ translate('Days') }}
-                                  @endif
-                                </div>
-
-
                             </form>
 
                             <div class="mt-3">

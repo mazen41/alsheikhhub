@@ -26,41 +26,13 @@
                                             @endif
                                             <span class="a_name"></span>
                                         </div>
-                                        @if (\App\Addon::where('unique_identifier', 'otp_system')->first() == null || !\App\Addon::where('unique_identifier', 'otp_system')->first()->activated)
-                                            <div class="form-group phone-form-group mb-3">
-                                                <input type="tel" class="form-control{{ $errors->has('phone') ? ' is-invalid' : '' }}" value="{{ old('phone') }}" placeholder="{{ translate('phone number') }}" name="phone" autocomplete="off">
-                                            </div>
-                                        @endif
+                                        <div class="form-group phone-form-group mb-3">
+                                            <input type="tel" id="phone-code" class="form-control{{ $errors->has('phone') ? ' is-invalid' : '' }}" value="{{ old('phone') }}" placeholder="05XXXXXXXX" name="phone" autocomplete="tel-national" inputmode="numeric" maxlength="10" pattern="(?:05[0-9]{8}|5[0-9]{8})" required>
+                                            @if ($errors->has('phone'))
+                                                <span class="invalid-feedback" role="alert"><strong>{{ $errors->first('phone') }}</strong></span>
+                                            @endif
+                                        </div>
                                         <input type="hidden" name="country_code" value="966">
-
-                                        @if (\App\Addon::where('unique_identifier', 'otp_system')->first() != null && \App\Addon::where('unique_identifier', 'otp_system')->first()->activated)
-                                            <div class="form-group phone-form-group mb-1">
-                                                <input type="tel" id="phone-code" class="form-control{{ $errors->has('phone') ? ' is-invalid' : '' }}" value="{{ old('phone') }}" placeholder="{{  translate('Email') }}" name="phone" autocomplete="off">
-
-                                            </div>
-
-                                            <div class="form-group email-form-group mb-1 d-none">
-                                                <input type="email" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email') }}" placeholder="{{  translate('Email') }}" name="email"  autocomplete="off">
-                                                @if ($errors->has('email'))
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $errors->first('email') }}</strong>
-                                                    </span>
-                                                @endif
-                                            </div>
-
-                                            <div class="form-group text-right">
-                                                <button class="btn btn-link p-0 opacity-100 text-reset" type="button" onclick="toggleEmailPhone(this)">{{ translate('Use Email Instead') }}</button>
-                                            </div>
-                                        @else
-                                            <div class="form-group">
-                                                <input type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email') }}" placeholder="{{  translate('Email') }}" name="email">
-                                                @if ($errors->has('email'))
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $errors->first('email') }}</strong>
-                                                    </span>
-                                                @endif
-                                            </div>
-                                        @endif
 
                                         <div class="form-group">
                                             <input type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" placeholder="{{  translate('Password') }}" name="password">
@@ -167,8 +139,7 @@
         });
         @endif
 
-        var isPhoneShown = true,
-            input = document.querySelector("#phone-code");
+        var input = document.querySelector("#phone-code");
 
         if (input) {
             var iti = intlTelInput(input, {
@@ -182,21 +153,6 @@
             input.addEventListener("countrychange", function() {
                 $('input[name=country_code]').val('966');
             });
-        }
-
-        function toggleEmailPhone(el){
-            if(isPhoneShown){
-                $('.phone-form-group').addClass('d-none');
-                $('.email-form-group').removeClass('d-none');
-                isPhoneShown = false;
-                $(el).html('{{ translate('Use Phone Instead') }}');
-            }
-            else{
-                $('.phone-form-group').removeClass('d-none');
-                $('.email-form-group').addClass('d-none');
-                isPhoneShown = true;
-                $(el).html('{{ translate('Use Email Instead') }}');
-            }
         }
     </script>
     <script>

@@ -76,7 +76,7 @@
                       <div class="col-xl col-md-6">
                           <div class="mb-3 mb-lg-0">
                               <a href="{{ data_get(json_decode(get_setting('home_banner4_links'), true), $key, '#') }}" class="d-block text-reset text-center">
-                                  <img src="{{ uploaded_asset($value) }}" alt="{{ env('APP_NAME') }} promo" class="img-fluid" onerror="this.onerror=null;this.closest('.col-xl').remove();">
+                                  <img src="{{ uploaded_asset($value) }}" alt="{{ env('APP_NAME') }} promo" class="img-fluid w-100" style="max-height: 380px; object-fit: contain;" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/no-image-rect.svg') }}';">
                                   {{-- {{ json_decode(get_setting('home_banner4_categories'), true)[$key] }}={{ $category_id }} --}}
                               </a>
                           </div>
@@ -100,7 +100,7 @@
                       <div class="col-xl col-md-6">
                           <div class="mb-3 mb-lg-0">
                               <a href="{{ data_get(json_decode(get_setting('home_banner7_links'), true), $key, '#') }}" class="d-block text-reset text-center">
-                                  <img src="{{ uploaded_asset($value) }}" alt="{{ env('APP_NAME') }} promo" class="img-fluid" onerror="this.onerror=null;this.closest('.col-xl').remove();">
+                                  <img src="{{ uploaded_asset($value) }}" alt="{{ env('APP_NAME') }} promo" class="img-fluid w-100" style="max-height: 380px; object-fit: contain;" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/no-image-rect.svg') }}';">
                                   {{-- {{ json_decode(get_setting('home_banner7_categories'), true)[$key] }}={{ $category_id }} --}}
                               </a>
                           </div>
@@ -121,7 +121,7 @@
           $num_cats = count(\App\Category::where('parent_id', $category_id)->get());
         @endphp
 
-        @if (!$isSubcategory && $num_cats > 0)
+        @if ($num_cats > 0)
             @foreach (\App\Category::where('parent_id', $category_id)->orderBy('order_level', 'desc')->get() as $subcategory)
                 @php
                     $subcategoryIds = \App\Utility\CategoryUtility::children_ids($subcategory->id);
@@ -158,12 +158,12 @@
         @endif
 
       {{-- products details --}}
-       @if($isSubcategory || $num_cats == 0)
+       @if($num_cats == 0)
        <section class="mb-4 pt-3">
           <div class="container sm-px-0">
               <form class="" id="search-form" action="" method="GET">
                   <div class="row">
-                       @if (!$isSubcategory)
+                       @if (!$currentCategory)
                        <div class="col-xl-3">
                           <div class="aiz-filter-sidebar collapse-sidebar-wrap sidebar-xl sidebar-right z-1035">
                               <div class="overlay overlay-fixed dark c-pointer" data-toggle="class-toggle" data-target=".aiz-filter-sidebar" data-same=".filter-sidebar-thumb"></div>
@@ -341,7 +341,7 @@
                       </div>
                        @endif
                       
-                       <div class="@if($isSubcategory) col-xl-12 @else col-xl-9 @endif">
+                       <div class="@if($currentCategory) col-xl-12 @else col-xl-9 @endif">
                           <ul class="breadcrumb bg-transparent p-0">
                               <li class="breadcrumb-item opacity-50">
                                   <a class="text-reset" href="{{ route('home') }}">{{ translate('Home')}}</a>
@@ -403,7 +403,7 @@
                                           <option value="price-desc" @isset($sort_by) @if ($sort_by == 'price-desc') selected @endif @endisset>{{ translate('Price high to low')}}</option>
                                       </select>
                                   </div>
-                                  @if (!$isSubcategory)
+                                  @if (!$currentCategory)
                                   <div class="d-xl-none ml-auto ml-xl-3 mr-0 form-group align-self-end">
                                       <button type="button" class="btn btn-icon p-0" data-toggle="class-toggle" data-target=".aiz-filter-sidebar">
                                           <i class="la la-filter la-2x"></i>

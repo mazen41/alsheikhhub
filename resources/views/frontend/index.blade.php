@@ -43,25 +43,6 @@
                             @endforeach
                         </div>
                     @endif
-                    @if (count($featured_categories) > 0)
-                        <ul class="list-unstyled mb-0 row gutters-5">
-                            @foreach ($featured_categories as $key => $category)
-                                <li class="minw-0 col-4 col-md col-sm-3 mt-3">
-                                    <a href="{{ route('products.category', $category->slug) }}" class="d-block rounded bg-white p-2 text-reset shadow-sm" style="width: 120px;border-radius: 60px 60px 0px 0px!important;text-align: center">
-                                        <img
-                                            src="{{ static_asset('assets/img/no-image.svg') }}"
-                                            data-src="{{ uploaded_asset($category->banner) }}"
-                                            alt="{{ $category->getTranslation('name') }}"
-                                            class="lazyload img-fit"
-                                            style="height: 100px;width: 100px;border-radius: 100%;"
-                                            onerror="this.onerror=null;this.src='{{ static_asset('assets/img/no-image-rect.svg') }}';"
-                                        >
-                                        <div class="text-truncate fs-12 fw-600 mt-2 opacity-70">{{ $category->getTranslation('name') }}</div>
-                                    </a>
-                                </li>
-                            @endforeach
-                        </ul>
-                    @endif
                 </div>
 
                 @if($num_todays_deal > 0)
@@ -92,6 +73,8 @@
         </div>
     </div>
 
+    {{-- Category sections: category title, its products, then its banner. --}}
+    <div id="section_home_categories"></div>
 
     {{-- Banner section 1 --}}
     @if (get_setting('home_banner1_images') != null)
@@ -102,8 +85,8 @@
                 @foreach ($banner_1_imags as $key => $value)
                     <div class="col-xl col-md-12">
                         <div class="mb-3 mb-lg-0">
-                            <a href="{{ json_decode(get_setting('home_banner1_links'), true)[$key] }}" class="d-block text-reset text-center">
-                                <img src="{{ static_asset('assets/img/no-image-rect.svg') }}" data-src="{{ uploaded_asset($banner_1_imags[$key]) }}" alt="{{ env('APP_NAME') }} promo" class="img-fluid lazyload">
+                            <a href="{{ data_get(json_decode(get_setting('home_banner1_links'), true), $key, '#') }}" class="d-block text-reset text-center">
+                                <img src="{{ static_asset('assets/img/no-image-rect.svg') }}" data-src="{{ uploaded_asset($banner_1_imags[$key]) }}" alt="{{ env('APP_NAME') }} promo" class="img-fluid lazyload w-100" style="max-height: 380px; object-fit: contain;" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/no-image-rect.svg') }}';">
                             </a>
                         </div>
                     </div>
@@ -163,8 +146,8 @@
                 @foreach ($banner_3_imags as $key => $value)
                     <div class="col-xl col-md-12">
                         <div class="mb-3 mb-lg-0">
-                            <a href="{{ json_decode(get_setting('home_banner3_links'), true)[$key] }}" class="d-block text-reset text-center">
-                                <img src="{{ static_asset('assets/img/no-image-rect.svg') }}" data-src="{{ uploaded_asset($banner_3_imags[$key]) }}" alt="{{ env('APP_NAME') }} promo" class="img-fluid lazyload">
+                            <a href="{{ data_get(json_decode(get_setting('home_banner3_links'), true), $key, '#') }}" class="d-block text-reset text-center">
+                                <img src="{{ static_asset('assets/img/no-image-rect.svg') }}" data-src="{{ uploaded_asset($banner_3_imags[$key]) }}" alt="{{ env('APP_NAME') }} promo" class="img-fluid lazyload w-100" style="max-height: 380px; object-fit: contain;" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/no-image-rect.svg') }}';">
                             </a>
                         </div>
                     </div>
@@ -190,8 +173,8 @@
                 @foreach ($banner_2_imags as $key => $value)
                     <div class="col-xl col-md-12">
                         <div class="mb-3 mb-lg-0">
-                            <a href="{{ json_decode(get_setting('home_banner2_links'), true)[$key] }}" class="d-block text-reset text-center">
-                                <img src="{{ static_asset('assets/img/no-image-rect.svg') }}" data-src="{{ uploaded_asset($banner_2_imags[$key]) }}" alt="{{ env('APP_NAME') }} promo" class="img-fluid lazyload">
+                            <a href="{{ data_get(json_decode(get_setting('home_banner2_links'), true), $key, '#') }}" class="d-block text-reset text-center">
+                                <img src="{{ static_asset('assets/img/no-image-rect.svg') }}" data-src="{{ uploaded_asset($banner_2_imags[$key]) }}" alt="{{ env('APP_NAME') }} promo" class="img-fluid lazyload w-100" style="max-height: 380px; object-fit: contain;" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/no-image-rect.svg') }}';">
                             </a>
                         </div>
                     </div>
@@ -200,39 +183,6 @@
         </div>
     </div>
     @endif
-
-    {{-- Category wise Products --}}
-    <div id="section_home_categories">
-
-    </div>
-
-    {{-- Classified Product --}}
-    @if(\App\BusinessSetting::where('type', 'classified_product')->first()->value == 1)
-        @php
-            $classified_products = \App\CustomerProduct::where('status', '1')->where('published', '1')->take(10)->get();
-        @endphp
-           @if (count($classified_products) > 0)
-               <section class="mb-4">
-                   <div class="container-fluid">
-                       <div class="px-2 py-4 px-md-4 py-md-3 bg-white shadow-sm rounded">
-                            <div class="d-flex mb-3 align-items-baseline border-bottom">
-                                <h3 class="h5 fw-700 mb-0">
-                                    <span class="border-bottom border-primary border-width-2 pb-3 d-inline-block">{{ translate('Classified Ads') }}</span>
-                                </h3>
-                                <a href="{{ route('customer.products') }}" class="ml-auto mr-0 btn btn-primary btn-sm shadow-md">{{ translate('View More') }}</a>
-                            </div>
-                           <div class="aiz-carousel gutters-10 half-outside-arrow" data-items="6" data-xl-items="5" data-lg-items="4"  data-md-items="3" data-sm-items="2" data-xs-items="2" data-arrows='true' data-infinite='true'>
-                               @foreach ($classified_products as $key => $classified_product)
-                                   <div class="carousel-box">
-                                    @include('common.product_item', ['product' => $classified_product])
-                                   </div>
-                               @endforeach
-                           </div>
-                       </div>
-                   </div>
-               </section>
-           @endif
-       @endif
 
     {{-- Banner Section 2 --}}
    {{-- @if (get_setting('home_banner3_images') != null)
@@ -243,8 +193,8 @@
                 @foreach ($banner_3_imags as $key => $value)
                     <div class="col-xl col-md-12">
                         <div class="mb-3 mb-lg-0">
-                            <a href="{{ json_decode(get_setting('home_banner3_links'), true)[$key] }}" class="d-block text-reset text-center">
-                                <img src="{{ static_asset('assets/img/no-image-rect.svg') }}" data-src="{{ uploaded_asset($banner_3_imags[$key]) }}" alt="{{ env('APP_NAME') }} promo" class="img-fluid lazyload">
+                            <a href="{{ data_get(json_decode(get_setting('home_banner3_links'), true), $key, '#') }}" class="d-block text-reset text-center">
+                                <img src="{{ static_asset('assets/img/no-image-rect.svg') }}" data-src="{{ uploaded_asset($banner_3_imags[$key]) }}" alt="{{ env('APP_NAME') }} promo" class="img-fluid lazyload w-100" style="max-height: 380px; object-fit: contain;" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/no-image-rect.svg') }}';">
                             </a>
                         </div>
                     </div>
@@ -253,15 +203,6 @@
         </div>
     </div>
     @endif --}}
-
-    {{-- Best Seller --}}
-    @if (\App\BusinessSetting::where('type', 'vendor_system_activation')->first()->value == 1)
-    <div id="section_best_sellers_none">
-
-    </div>
-    <br>
-    <br>
-    @endif
 
 @endsection
 
