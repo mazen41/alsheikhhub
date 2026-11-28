@@ -55,10 +55,9 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'name' => 'required|string|max:255',
-            'registration_method' => 'required|in:phone,email',
-            'email' => 'required_if:registration_method,email|nullable|email|max:255|unique:users,email',
-            'phone' => ['required_if:registration_method,phone', 'nullable', 'regex:/^(?:05[0-9]{8}|5[0-9]{8})$/'],
-            'country_code' => 'required_if:registration_method,phone|in:966',
+            'email' => 'required|email|max:255|unique:users,email',
+            'phone' => ['required', 'regex:/^(?:05[0-9]{8}|5[0-9]{8})$/'],
+            'country_code' => 'required|in:966',
             'password' => 'required|string|min:6|confirmed',
         ]);
     }
@@ -71,26 +70,19 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        $accountDetails = [
+        $phone = $data['phone'];
+        if (strlen($phone) === 10 && substr($phone, 0, 1) === '0') {
+            $phone = substr($phone, 1);
+        }
+
+        $user = User::create([
             'name' => $data['name'],
+            'email' => strtolower(trim($data['email'])),
+            'phone' => '+966'.$phone,
             'password' => Hash::make($data['password']),
             'email_verified_at' => now(),
             'verification_code' => null,
-        ];
-
-        if ($data['registration_method'] === 'email') {
-            $accountDetails['email'] = strtolower(trim($data['email']));
-            $accountDetails['phone'] = null;
-        } else {
-            $phone = $data['phone'];
-            if (strlen($phone) === 10 && substr($phone, 0, 1) === '0') {
-                $phone = substr($phone, 1);
-            }
-            $accountDetails['phone'] = '+966'.$phone;
-            $accountDetails['email'] = null;
-        }
-
-        $user = User::create($accountDetails);
+        ]);
 
         $customer = new Customer;
         $customer->user_id = $user->id;
@@ -110,9 +102,10 @@ class RegisterController extends Controller
 
     public function register(Request $request)
     {
+        $request->merge(['email' => strtolower(trim((string) $request->input('email')))]);
         $validator = $this->validator($request->all());
         $validator->after(function ($validator) use ($request) {
-            if ($request->input('registration_method') === 'phone' && preg_match('/^(?:05[0-9]{8}|5[0-9]{8})$/', (string) $request->input('phone'))) {
+            if (preg_match('/^(?:05[0-9]{8}|5[0-9]{8})$/', (string) $request->input('phone'))) {
                 $phone = $request->input('phone');
                 $normalizedPhone = strlen($phone) === 10 && substr($phone, 0, 1) === '0'
                     ? substr($phone, 1)
