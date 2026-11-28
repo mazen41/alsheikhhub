@@ -14,7 +14,7 @@
                     $featured_categories = \App\Category::where('featured', 1)->get();
                 @endphp
 
-                <div class="@if($num_todays_deal > 0) col-lg-9 @else col-12 @endif">
+                <div class="col-12">
                     @if (get_setting('home_slider_images') != null)
                         @php
                             $slider_images = json_decode(get_setting('home_slider_images'), true) ?: [];
@@ -54,33 +54,31 @@
                     @endif
                 </div>
 
-                @if($num_todays_deal > 0)
-                <div class="col-lg-3 order-3 mt-3 mt-lg-0">
-                    <div class="bg-white rounded shadow-sm">
-                        <div class="bg-soft-primary rounded-top p-3 d-flex align-items-center justify-content-between">
-                            <span class="fw-600 fs-16 mr-2 text-truncate">
-                                {{ translate('Todays Deal') }}
-                            </span>
-                            <span class="badge badge-primary badge-inline">{{ translate('Hot') }}</span>
-                        </div>
-                        <div class="today-deal-panel p-2 bg-light rounded-bottom">
-                            <div class="gutters-5 lg-no-gutters row row-cols-1">
-                            @foreach (filter_products(\App\Product::where('published', 1)->where('todays_deal', '1'))->take(1)->get() as $key => $product)
-                                @if ($product != null)
-                                <div class="col mb-2">
-                                    @include('common.product_item', ['product' => $product])
-                                </div>
-                                @endif
-                            @endforeach
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                @endif
-
             </div>
         </div>
     </div>
+
+    @if($num_todays_deal > 0)
+        <section class="mb-4 today-deal-section">
+            <div class="container-fluid">
+                <div class="bg-white rounded shadow-sm p-3">
+                    <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+                        <h2 class="h5 fw-700 mb-0">{{ translate('Todays Deal') }}</h2>
+                        <span class="badge badge-primary badge-inline">{{ translate('Hot') }}</span>
+                    </div>
+                    <div class="row gutters-10 row-cols-1 row-cols-sm-2 row-cols-lg-4">
+                        @foreach (filter_products(\App\Product::where('published', 1)->where('todays_deal', '1'))->take(1)->get() as $product)
+                            @if ($product != null)
+                                <div class="col mb-2">
+                                    @include('common.product_item', ['product' => $product])
+                                </div>
+                            @endif
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </section>
+    @endif
 
     {{-- Category sections: category title, its products, then its banner. --}}
     <div id="section_home_categories"></div>
