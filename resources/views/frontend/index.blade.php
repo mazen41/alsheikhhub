@@ -16,19 +16,20 @@
 
                 <div class="@if($num_todays_deal > 0) col-lg-9 @else col-12 @endif">
                     @if (get_setting('home_slider_images') != null)
+                        @php
+                            $slider_images = json_decode(get_setting('home_slider_images'), true) ?: [];
+                            $seenSliderImages = [];
+                            $slider_images = array_filter($slider_images, function ($imageId) use (&$seenSliderImages) {
+                                $imageUrl = uploaded_asset($imageId);
+                                if (!$imageUrl || in_array($imageUrl, $seenSliderImages, true)) {
+                                    return false;
+                                }
+                                $seenSliderImages[] = $imageUrl;
+                                return true;
+                            });
+                        @endphp
+                        @if (count($slider_images) > 0)
                         <div class="aiz-carousel dots-inside-bottom mobile-img-auto-height" data-arrows="true" data-dots="true" data-autoplay="true" data-infinite="true">
-                            @php
-                                $slider_images = json_decode(get_setting('home_slider_images'), true) ?: [];
-                                $seenSliderImages = [];
-                                $slider_images = array_filter($slider_images, function ($imageId) use (&$seenSliderImages) {
-                                    $imageUrl = uploaded_asset($imageId);
-                                    if (!$imageUrl || in_array($imageUrl, $seenSliderImages, true)) {
-                                        return false;
-                                    }
-                                    $seenSliderImages[] = $imageUrl;
-                                    return true;
-                                });
-                            @endphp
                             @foreach ($slider_images as $key => $value)
                                 @php
                                     $sliderImageUrl = uploaded_asset($value);
@@ -42,17 +43,14 @@
                                             src="{{ $sliderImageUrl }}"
                                             alt="{{ env('APP_NAME')}} promo"
                                             height="{{ $sliderImageHeight }}"
-                                            onerror="this.onerror=null;this.classList.add('d-none');this.nextElementSibling.classList.remove('d-none');"
+                                            onerror="this.onerror=null;this.closest('.carousel-box').remove();"
                                         >
                                         @endif
-                                        <div class="{{ $sliderImageUrl ? 'd-none' : '' }} bg-light text-muted d-flex flex-column align-items-center justify-content-center rounded shadow-sm" role="img" aria-label="{{ translate('No image available') }}" style="width: 100%; height: {{ $sliderImageHeight }}px;">
-                                            <i class="las la-image fs-1"></i>
-                                            <span>{{ translate('No image available') }}</span>
-                                        </div>
                                     </a>
                                 </div>
                             @endforeach
                         </div>
+                        @endif
                     @endif
                 </div>
 
@@ -123,17 +121,6 @@
     </section>
     @endif
 
-    {{-- Featured Section --}}
-    <div id="section_featured">
-
-    </div>
-    
-    {{-- Best Selling  --}}
-    <div id="section_best_selling">
-
-    </div>
-
-
     {{-- Banner Section 2 --}}
    {{-- @if (get_setting('home_banner3_images') != null)
     <div class="mb-4">
@@ -159,25 +146,10 @@
 @section('script')
     <script>
         $(document).ready(function(){
-            $.post('{{ route('home.section.featured') }}', {_token:'{{ csrf_token() }}'}, function(data){
-                $('#section_featured').html(data);
-                AIZ.plugins.slickCarousel();
-            });
-            $.post('{{ route('home.section.best_selling') }}', {_token:'{{ csrf_token() }}'}, function(data){
-                $('#section_best_selling').html(data);
-                AIZ.plugins.slickCarousel();
-            });
             $.post('{{ route('home.section.home_categories') }}', {_token:'{{ csrf_token() }}'}, function(data){
                 $('#section_home_categories').html(data);
                 AIZ.plugins.slickCarousel();
             });
-
-            @if (\App\BusinessSetting::where('type', 'vendor_system_activation')->first()->value == 1)
-            $.post('{{ route('home.section.best_sellers') }}', {_token:'{{ csrf_token() }}'}, function(data){
-                $('#section_best_sellers').html(data);
-                AIZ.plugins.slickCarousel();
-            });
-            @endif
         });
     </script>
 @endsection
