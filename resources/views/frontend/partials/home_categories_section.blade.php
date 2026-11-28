@@ -21,6 +21,7 @@
                 ->orderBy('created_at', 'desc')
         )->limit(12)->get();
         $categoryBanners = [];
+        $seenCategoryBannerImages = [];
         foreach ([4, 7] as $bannerSlot) {
             $bannerImages = json_decode(get_setting('home_banner'.$bannerSlot.'_images') ?: '[]', true) ?: [];
             $bannerCategories = json_decode(get_setting('home_banner'.$bannerSlot.'_categories') ?: '[]', true) ?: [];
@@ -28,7 +29,8 @@
 
             foreach ($bannerImages as $index => $imageId) {
                 $imageUrl = uploaded_asset($imageId);
-                if ((int) data_get($bannerCategories, $index, 0) === (int) $category->id && $imageUrl) {
+                if ((int) data_get($bannerCategories, $index, 0) === (int) $category->id && $imageUrl && !in_array($imageUrl, $seenCategoryBannerImages, true)) {
+                    $seenCategoryBannerImages[] = $imageUrl;
                     $categoryBanners[] = [
                         'image' => $imageUrl,
                         'link' => data_get($bannerLinks, $index, '#'),

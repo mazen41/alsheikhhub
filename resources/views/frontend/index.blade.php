@@ -76,26 +76,6 @@
     {{-- Category sections: category title, its products, then its banner. --}}
     <div id="section_home_categories"></div>
 
-    {{-- Banner section 1 --}}
-    @if (get_setting('home_banner1_images') != null)
-    <div class="mb-4">
-        <div class="container-fluid" style='padding:0px;'>
-            <div class="row">
-                @php $banner_1_imags = json_decode(get_setting('home_banner1_images')); @endphp
-                @foreach ($banner_1_imags as $key => $value)
-                    <div class="col-xl col-md-12">
-                        <div class="mb-3 mb-lg-0">
-                            <a href="{{ data_get(json_decode(get_setting('home_banner1_links'), true), $key, '#') }}" class="d-block text-reset text-center">
-                                <img src="{{ static_asset('assets/img/no-image-rect.svg') }}" data-src="{{ uploaded_asset($banner_1_imags[$key]) }}" alt="{{ env('APP_NAME') }} promo" class="img-fluid lazyload w-100" style="max-height: 380px; object-fit: contain;" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/no-image-rect.svg') }}';">
-                            </a>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    </div>
-    @endif
-
 
     {{-- Flash Deal --}}
     @php

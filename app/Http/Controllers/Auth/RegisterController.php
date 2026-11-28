@@ -4,9 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\User;
 use App\Customer;
-use App\OtpConfiguration;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\OTPVerificationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -76,22 +74,17 @@ class RegisterController extends Controller
             $phone = substr($phone, 1);
         }
 
-        $otpEnabled = \App\Addon::where('unique_identifier', 'otp_system')->value('activated');
         $user = User::create([
             'name' => $data['name'],
             'phone' => '+966'.$phone,
             'password' => Hash::make($data['password']),
-            'verification_code' => $otpEnabled ? rand(100000, 999999) : null,
+            'email_verified_at' => now(),
+            'verification_code' => null,
         ]);
 
         $customer = new Customer;
         $customer->user_id = $user->id;
         $customer->save();
-
-        if ($otpEnabled) {
-            $otpController = new OTPVerificationController;
-            $otpController->send_code($user);
-        }
 
         if(Cookie::has('referral_code')){
             $referral_code = Cookie::get('referral_code');
@@ -130,11 +123,6 @@ class RegisterController extends Controller
 
     protected function registered(Request $request, $user)
     {
-        if ($user->email == null && \App\Addon::where('unique_identifier', 'otp_system')->value('activated')) {
-            return redirect()->route('verification');
-        }
-        else {
-            return redirect()->route('home');
-        }
+        return redirect()->route('home');
     }
 }
