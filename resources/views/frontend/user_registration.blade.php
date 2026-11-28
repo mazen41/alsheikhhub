@@ -26,13 +26,30 @@
                                             @endif
                                             <span class="a_name"></span>
                                         </div>
-                                        <div class="form-group phone-form-group mb-3">
-                                            <input type="tel" id="phone-code" class="form-control{{ $errors->has('phone') ? ' is-invalid' : '' }}" value="{{ old('phone') }}" placeholder="05XXXXXXXX" name="phone" autocomplete="tel-national" inputmode="numeric" maxlength="10" pattern="(?:05[0-9]{8}|5[0-9]{8})" required>
-                                            @if ($errors->has('phone'))
-                                                <span class="invalid-feedback" role="alert"><strong>{{ $errors->first('phone') }}</strong></span>
+                                        @php $registrationMethod = old('registration_method', 'phone'); @endphp
+                                        <div class="form-group">
+                                            <label for="registration-method">{{ translate('Register using') }}</label>
+                                            <select class="form-control" id="registration-method" name="registration_method">
+                                                <option value="phone" {{ $registrationMethod === 'phone' ? 'selected' : '' }}>{{ translate('Phone number') }}</option>
+                                                <option value="email" {{ $registrationMethod === 'email' ? 'selected' : '' }}>{{ translate('Email') }}</option>
+                                            </select>
+                                            @if ($errors->has('registration_method'))
+                                                <span class="invalid-feedback d-block" role="alert"><strong>{{ $errors->first('registration_method') }}</strong></span>
                                             @endif
                                         </div>
-                                        <input type="hidden" name="country_code" value="966">
+                                        <div id="registration-phone-group" class="form-group phone-form-group mb-3" style="{{ $registrationMethod === 'phone' ? '' : 'display:none;' }}">
+                                            <input type="tel" id="phone-code" class="form-control{{ $errors->has('phone') ? ' is-invalid' : '' }}" value="{{ old('phone') }}" placeholder="05XXXXXXXX" name="phone" autocomplete="tel-national" inputmode="numeric" maxlength="10" pattern="(?:05[0-9]{8}|5[0-9]{8})" {{ $registrationMethod === 'phone' ? 'required' : 'disabled' }}>
+                                            @if ($errors->has('phone'))
+                                                <span class="invalid-feedback d-block" role="alert"><strong>{{ $errors->first('phone') }}</strong></span>
+                                            @endif
+                                        </div>
+                                        <input type="hidden" id="registration-country-code" name="country_code" value="966" {{ $registrationMethod === 'phone' ? '' : 'disabled' }}>
+                                        <div id="registration-email-group" class="form-group mb-3" style="{{ $registrationMethod === 'email' ? '' : 'display:none;' }}">
+                                            <input type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email') }}" placeholder="{{ translate('Email') }}" name="email" autocomplete="email" {{ $registrationMethod === 'email' ? 'required' : 'disabled' }}>
+                                            @if ($errors->has('email'))
+                                                <span class="invalid-feedback d-block" role="alert"><strong>{{ $errors->first('email') }}</strong></span>
+                                            @endif
+                                        </div>
 
                                         <div class="form-group">
                                             <input type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" placeholder="{{  translate('Password') }}" name="password">
@@ -134,12 +151,33 @@
                 }
                 //captcha verified
                 //do the rest of your validations here
-                $("#reg-form").submit();
+                evt.currentTarget.submit();
             });
         });
         @endif
 
         var input = document.querySelector("#phone-code");
+        var registrationMethod = document.querySelector("#registration-method");
+        var phoneGroup = document.querySelector("#registration-phone-group");
+        var emailGroup = document.querySelector("#registration-email-group");
+        var countryCode = document.querySelector("#registration-country-code");
+
+        function updateRegistrationMethod() {
+            var usePhone = registrationMethod.value === 'phone';
+            phoneGroup.style.display = usePhone ? '' : 'none';
+            emailGroup.style.display = usePhone ? 'none' : '';
+            input.disabled = !usePhone;
+            input.required = usePhone;
+            countryCode.disabled = !usePhone;
+            var emailInput = emailGroup.querySelector('input[name="email"]');
+            emailInput.disabled = usePhone;
+            emailInput.required = !usePhone;
+        }
+
+        if (registrationMethod) {
+            registrationMethod.addEventListener('change', updateRegistrationMethod);
+            updateRegistrationMethod();
+        }
 
         if (input) {
             var iti = intlTelInput(input, {

@@ -18,14 +18,11 @@
                                     <form class="form-default" role="form" action="{{ route('login') }}" method="POST">
                                         @csrf
                                         <div class="form-group">
-                                            @if (\App\Addon::where('unique_identifier', 'otp_system')->first() != null && \App\Addon::where('unique_identifier', 'otp_system')->first()->activated)
-                                                <input type="text" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email') }}" placeholder="{{ translate('Email Or Phone')}}" name="email" id="email">
-                                            @else
-                                                <input type="email" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email') }}" placeholder="{{  translate('Email') }}" name="email">
+                                            <input type="text" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email') }}" placeholder="{{ translate('Email or Saudi phone number')}}" name="email" id="email" autocomplete="username" required>
+                                            @if ($errors->has('email'))
+                                                <span class="invalid-feedback" role="alert"><strong>{{ $errors->first('email') }}</strong></span>
                                             @endif
-                                            @if (\App\Addon::where('unique_identifier', 'otp_system')->first() != null && \App\Addon::where('unique_identifier', 'otp_system')->first()->activated)
-                                                <span class="opacity-60">{{  translate('Use country code before number') }}</span>
-                                            @endif
+                                            <span class="opacity-60">{{ translate('Enter your email or Saudi phone number')}}</span>
                                         </div>
 
                                         <div class="form-group">

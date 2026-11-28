@@ -101,7 +101,10 @@ class LoginController extends Controller
        protected function credentials(Request $request)
        {
            if(filter_var($request->get('email'), FILTER_VALIDATE_EMAIL)){
-               return $request->only($this->username(), 'password');
+               return [
+                   $this->username() => strtolower(trim($request->get('email'))),
+                   'password' => $request->get('password'),
+               ];
            }
 
            $phone = preg_replace('/[^0-9+]/', '', (string) $request->get('email'));
