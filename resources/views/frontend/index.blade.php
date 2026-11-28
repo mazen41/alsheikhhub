@@ -17,7 +17,18 @@
                 <div class="@if($num_todays_deal > 0) col-lg-9 @else col-12 @endif">
                     @if (get_setting('home_slider_images') != null)
                         <div class="aiz-carousel dots-inside-bottom mobile-img-auto-height" data-arrows="true" data-dots="true" data-autoplay="true" data-infinite="true">
-                            @php $slider_images = json_decode(get_setting('home_slider_images'), true);  @endphp
+                            @php
+                                $slider_images = json_decode(get_setting('home_slider_images'), true) ?: [];
+                                $seenSliderImages = [];
+                                $slider_images = array_filter($slider_images, function ($imageId) use (&$seenSliderImages) {
+                                    $imageUrl = uploaded_asset($imageId);
+                                    if (!$imageUrl || in_array($imageUrl, $seenSliderImages, true)) {
+                                        return false;
+                                    }
+                                    $seenSliderImages[] = $imageUrl;
+                                    return true;
+                                });
+                            @endphp
                             @foreach ($slider_images as $key => $value)
                                 @php
                                     $sliderImageUrl = uploaded_asset($value);
@@ -117,52 +128,11 @@
 
     </div>
     
-    {{-- new ads between featured and best selling --}}
-    @if (get_setting('home_banner3_images') != null)
-    <div class="mb-4">
-        <div class="container-fluid">
-            <div class="row">
-                @php $banner_3_imags = json_decode(get_setting('home_banner3_images')); @endphp
-                @foreach ($banner_3_imags as $key => $value)
-                    <div class="col-xl col-md-12">
-                        <div class="mb-3 mb-lg-0">
-                            <a href="{{ data_get(json_decode(get_setting('home_banner3_links'), true), $key, '#') }}" class="d-block text-reset text-center">
-                                <img src="{{ static_asset('assets/img/no-image-rect.svg') }}" data-src="{{ uploaded_asset($banner_3_imags[$key]) }}" alt="{{ env('APP_NAME') }} promo" class="img-fluid lazyload w-100" style="max-height: 380px; object-fit: contain;" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/no-image-rect.svg') }}';">
-                            </a>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    </div>
-    @endif
-    {{-- end new ads between featured and best selling --}}
-
     {{-- Best Selling  --}}
     <div id="section_best_selling">
 
     </div>
 
-
-    {{-- Banner Section 2 --}}
-    @if (get_setting('home_banner2_images') != null)
-    <div class="mb-4">
-        <div class="container-fluid">
-            <div class="row">
-                @php $banner_2_imags = json_decode(get_setting('home_banner2_images')); @endphp
-                @foreach ($banner_2_imags as $key => $value)
-                    <div class="col-xl col-md-12">
-                        <div class="mb-3 mb-lg-0">
-                            <a href="{{ data_get(json_decode(get_setting('home_banner2_links'), true), $key, '#') }}" class="d-block text-reset text-center">
-                                <img src="{{ static_asset('assets/img/no-image-rect.svg') }}" data-src="{{ uploaded_asset($banner_2_imags[$key]) }}" alt="{{ env('APP_NAME') }} promo" class="img-fluid lazyload w-100" style="max-height: 380px; object-fit: contain;" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/no-image-rect.svg') }}';">
-                            </a>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    </div>
-    @endif
 
     {{-- Banner Section 2 --}}
    {{-- @if (get_setting('home_banner3_images') != null)
